@@ -1,1 +1,9 @@
-/* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
+@import './assets/fonts/clashDisplay/WEB/css/clash-display.css';
+
+html {
+  background-color: #000;
+  font-family: 'ClashDisplay-Variable', sans-serif;
+  font-variation-settings: 'wght' 500;
+  color: #FFF;
+}

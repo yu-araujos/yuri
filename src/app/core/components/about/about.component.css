@@ -1,0 +1,32 @@
+.scroll-text {
+  transform: translateX(var(--scroll-position, 0px));
+  transition: transform 0.1s linear;
+  will-change: transform;
+  display: flex;
+  white-space: nowrap;
+}
+
+.img-bw, .icons-tech>li>img {
+  filter: grayscale(100%);
+  transition: filter 1s ease;
+}
+
+.img-bw:hover, .icons-tech>li>img:hover {
+  transition: filter 0.5s ease;
+  filter: grayscale(0%);
+}
+
+.icons-tech>li>img#angular {
+  width: 120px;
+  height: fit-content;
+}
+
+.icons-tech>li>img#java {
+  width: 90px;
+  height:fit-content;
+}
+
+.icons-tech>li>img#python {
+  width: 75px;
+  height: fit-content;
+}

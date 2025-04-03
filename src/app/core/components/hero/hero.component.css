@@ -1,0 +1,19 @@
+.letter {
+  display: inline-block;
+  font-variation-settings: 'wght' 100;
+  transform: translateY(0);
+}
+
+.animate {
+  animation: animateLetter 6s ease forwards;
+  animation-delay: calc(var(--index) * 0.1s);
+}
+
+@keyframes animateLetter {
+  0%, 100% {
+    font-variation-settings: 'wght' 100;
+  }
+  50% {
+    font-variation-settings: 'wght' 700;
+  }
+}

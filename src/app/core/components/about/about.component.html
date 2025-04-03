@@ -1,0 +1,31 @@
+<section class="w-full h-screen py-20 mb-20">
+  <div class="relative overflow-hidden w-full h-[150px] bg-black">
+    <div 
+      class="flex whitespace-nowrap uppercase text-7xl will-change-transform"
+      [style.transform]="'translateX(' + scrollPosition + 'px)'">  
+      <span *ngFor="let word of repeatedWords" class="mr-10">
+        <span class="text-[#9EC6F3]">*</span> 
+        {{ word }}
+      </span>
+    </div>
+  </div>
+
+  <div class="container w-8/12 m-auto">
+    <div>
+      <img src="./assets/images/eu.jpg" alt="Yuri Silva" class="rounded-full w-40 h-full m-auto img-bw">
+    </div>
+    <div>
+      <p class="mt-4 text-center text-5xl">
+        I'm a software developer with a passion for the world of technology.  
+        I have a solid background in front-end development and enjoy exploring back-end technologies as well.
+      </p>
+    </div>
+    <div class="w-full mt-14 mx-auto">
+      <ul class="icons-tech flex justify-center items-end">
+        <li class="mr-3.5"><img src="./assets/images/icons-tech/angular.svg" alt="Angular" id="angular"></li>
+        <li class="mr-3.5"><img src="./assets/images/icons-tech/java.svg" alt="Java" id="java"></li>
+        <li><img src="./assets/images/icons-tech/python.svg" alt="Python" id="python"></li>
+      </ul>
+    </div>
+  </div>
+</section>
