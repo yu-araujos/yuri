@@ -5,12 +5,19 @@
   text-decoration-style: wavy
 }
 
-.soon::after {
-  display: block;
+.soon::after{
+  display: none;
   position: absolute;
   content: 'soon';
   font-size: 0.9rem;
   color: #9EC6F3;
-  margin-left: 50px;
-  text-decoration: none;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  cursor: none;
+}
+
+.soon:hover::after {
+  display: block;
 }
