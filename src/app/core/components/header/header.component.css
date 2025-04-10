@@ -1,0 +1,16 @@
+.soon{
+  position: relative;
+  text-decoration: line-through 3px;
+  text-decoration-color: #9EC6F3;
+  text-decoration-style: wavy
+}
+
+.soon::after {
+  display: block;
+  position: absolute;
+  content: 'soon';
+  font-size: 0.9rem;
+  color: #9EC6F3;
+  margin-left: 50px;
+  text-decoration: none;
+}

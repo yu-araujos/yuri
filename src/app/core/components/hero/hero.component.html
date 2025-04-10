@@ -1,6 +1,6 @@
-<main class="w-full m-auto xl:px-12">
-  <div class="h-[10vh] lg:h-[90vh] flex items-center justify-center">
-    <h1 class="text-center text-2xl lg:text-9xl">
+<main class="w-full m-auto xl:px-12 mt-20 lg:mt-0">
+  <div class="h-[20vh] md:h-[50vh] lg:h-[90vh] flex items-center justify-center">
+    <h1 class="text-center text-4xl md:text-6xl lg:text-9xl">
       <span *ngFor="let letter of letters; let i = index" 
             class="letter uppercase" 
             [ngClass]="{'animate': animate}" 
@@ -9,10 +9,10 @@
       </span>
     </h1>
   </div>
-  <div class="justify-between uppercase items-center hidden lg:flex tracking-wider">
-    <p>Let's work together</p>
-    <p>Yuri Silva • Fullstack Developer</p>
-    <p>Always ready to start</p>
-  </div>
 
+  <div class="flex flex-row justify-between uppercase items-center text-center lg:text-left gap-4 lg:gap-0 tracking-wider p-4">
+    <p class="text-[0.7rem] md:text-base lg:text-lg">Let's work together</p>
+    <p class="text-[0.7rem] md:text-base lg:text-lg">Yuri Silva <span class="hidden lg:inline-block">•</span> Developer</p>
+    <p class="text-[0.7rem] md:text-base lg:text-lg">Always ready to start</p>
+  </div>
 </main>

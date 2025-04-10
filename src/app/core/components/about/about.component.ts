@@ -14,6 +14,6 @@ export class AboutComponent {
   @HostListener('window:scroll', ['$event'])
   onScroll() {
     const scrollTop = window.scrollY || document.documentElement.scrollTop;
-    this.scrollPosition = scrollTop * -0.9;
+    this.scrollPosition = scrollTop * -0.5;
   }
 }
