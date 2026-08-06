@@ -14,7 +14,7 @@ interface OSState {
   windows: Record<AppId, WindowState>;
   activeWindow: AppId | null;
   highestZIndex: number;
-  
+
   openApp: (id: AppId) => void;
   closeApp: (id: AppId) => void;
   minimizeApp: (id: AppId) => void;
@@ -30,7 +30,7 @@ const defaultWindows: Record<AppId, WindowState> = {
 
 export const useOSStore = create<OSState>((set) => ({
   windows: defaultWindows,
-  activeWindow: null, // Nenhum app focado inicialmente
+  activeWindow: null,
   highestZIndex: 1,
 
   openApp: (id) =>
