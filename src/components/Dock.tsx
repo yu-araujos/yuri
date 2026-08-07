@@ -81,7 +81,6 @@ function DockItem({
 }) {
   const ref = React.useRef<HTMLButtonElement>(null);
 
-  // Efeito de zoom estilo Mac só se aplica quando está no modo horizontal
   const distance = useTransform(mouseX, (val: number) => {
     const bounds = ref.current?.getBoundingClientRect() ?? { x: 0, width: 0 };
     return val - bounds.x - bounds.width / 2;
