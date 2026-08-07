@@ -62,22 +62,22 @@ export function Window({ id }: WindowProps) {
           {isMaximized && (
             <div className="absolute top-6 right-8 flex items-center space-x-3 z-50">
               <button 
-                onClick={(e) => { e.stopPropagation(); minimizeApp(id); }}
-                className="w-4 h-4 rounded-full bg-yellow-500 hover:bg-yellow-600 flex items-center justify-center group transition-colors"
+                onClick={(e) => { e.stopPropagation(); closeApp(id); }}
+                className="w-3.5 h-3.5 rounded-full bg-red-500 hover:bg-red-600 flex items-center justify-center group transition-colors"
               >
-                <Minus className="w-3 h-3 text-yellow-950 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <X className="w-2.5 h-2.5 text-red-950 opacity-0 group-hover:opacity-100 transition-opacity" />
+              </button>
+              <button 
+                onClick={(e) => { e.stopPropagation(); minimizeApp(id); }}
+                className="w-3.5 h-3.5 rounded-full bg-yellow-500 hover:bg-yellow-600 flex items-center justify-center group transition-colors"
+              >
+                <Minus className="w-2.5 h-2.5 text-yellow-950 opacity-0 group-hover:opacity-100 transition-opacity" />
               </button>
               <button 
                 onClick={(e) => { e.stopPropagation(); maximizeApp(id); }}
-                className="w-4 h-4 rounded-full bg-green-500 hover:bg-green-600 flex items-center justify-center group transition-colors"
+                className="w-3.5 h-3.5 rounded-full bg-green-500 hover:bg-green-600 flex items-center justify-center group transition-colors"
               >
-                <Maximize2 className="w-3 h-3 text-green-950 opacity-0 group-hover:opacity-100 transition-opacity" />
-              </button>
-              <button 
-                onClick={(e) => { e.stopPropagation(); closeApp(id); }}
-                className="w-4 h-4 rounded-full bg-red-500 hover:bg-red-600 flex items-center justify-center group transition-colors"
-              >
-                <X className="w-3 h-3 text-red-950 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <Maximize2 className="w-2.5 h-2.5 text-green-950 opacity-0 group-hover:opacity-100 transition-opacity" />
               </button>
             </div>
           )}
