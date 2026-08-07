@@ -117,12 +117,11 @@ export function Window({ id }: WindowProps) {
                   {titleMap[id]}
                 </div>
 
-                <div className="w-16" /> {/* Espaçador */}
+                <div className="w-16" />
               </motion.div>
             )}
           </AnimatePresence>
 
-          {/* Body da Janela / Site */}
           <motion.div 
             layout
             className={cn(
