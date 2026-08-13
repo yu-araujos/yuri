@@ -13,9 +13,9 @@ import { useOSStore, AppId } from "@/store/useOSStore";
 import { cn } from "@/lib/utils";
 
 const APPS = [
-  { id: "about" as AppId, label: "About", icon: User },
-  { id: "projects" as AppId, label: "Projects", icon: FolderGit2 },
-  { id: "contact" as AppId, label: "Contact", icon: AtSign },
+  { id: "about" as AppId, label: "About", icon: User, disabled: false },
+  { id: "projects" as AppId, label: "Soon", icon: FolderGit2, disabled: true },
+  { id: "contact" as AppId, label: "Contact", icon: AtSign, disabled: false },
 ];
 
 export function Dock() {
@@ -155,15 +155,26 @@ function DockItem({
       <motion.button
         ref={ref}
         layout
+        disabled={app.disabled}
         style={
           isVertical
             ? { width: 44, height: 44 }
             : { width: widthSpring, height: widthSpring }
         }
-        onClick={onClick}
-        className="flex items-center justify-center rounded-2xl bg-stone-200/80 dark:bg-zinc-900/90 border border-stone-300 dark:border-zinc-700/50 shadow-lg transition-colors hover:bg-stone-300/60 dark:hover:bg-zinc-800 hover:border-stone-400 dark:hover:border-zinc-600"
+        onClick={() => !app.disabled && onClick()}
+        className={cn(
+          "flex items-center justify-center rounded-2xl bg-stone-200/80 dark:bg-zinc-900/90 border border-stone-300 dark:border-zinc-700/50 shadow-lg transition-colors",
+          app.disabled
+            ? "opacity-50 cursor-not-allowed border-dashed"
+            : "hover:bg-stone-300/60 dark:hover:bg-zinc-800 hover:border-stone-400 dark:hover:border-zinc-600",
+        )}
       >
-        <app.icon className="w-1/2 h-1/2 text-brand" />
+        <app.icon
+          className={cn(
+            "w-1/2 h-1/2",
+            app.disabled ? "text-zinc-400 dark:text-zinc-500" : "text-brand",
+          )}
+        />
       </motion.button>
 
       <motion.div
