@@ -39,29 +39,51 @@ export const useOSStore = create<OSState>((set) => ({
 
   openApp: (id) =>
     set((state) => {
-      const isAppOpen = state.windows[id].isOpen;
       const newZIndex = state.highestZIndex + 1;
-      const anyMaximized = Object.values(state.windows).some(w => w.isMaximized);
 
-      if (anyMaximized) {
+      if (id === "contact") {
+        return {
+          windows: {
+            ...state.windows,
+            contact: {
+              ...state.windows.contact,
+              isOpen: true,
+              isMinimized: false,
+              isMaximized: false,
+              zIndex: newZIndex,
+            },
+          },
+          activeWindow: "contact",
+          highestZIndex: newZIndex,
+        };
+      }
+
+      const isAppOpen = state.windows[id].isOpen;
+      const otherMaximized = (Object.keys(state.windows) as AppId[]).find(
+        (key) => key !== "contact" && key !== id && state.windows[key].isMaximized,
+      );
+
+      if (otherMaximized) {
         const updatedWindows = { ...state.windows };
-        (Object.keys(updatedWindows) as AppId[]).forEach(key => {
-          updatedWindows[key] = { 
-            ...updatedWindows[key], 
-            isMinimized: key !== id, 
-            isMaximized: key === id ? true : updatedWindows[key].isMaximized,
-            isOpen: key === id
-          };
-        });
-        updatedWindows[id].zIndex = newZIndex;
-        
+        updatedWindows[otherMaximized] = {
+          ...updatedWindows[otherMaximized],
+          isMinimized: true,
+        };
+        updatedWindows[id] = {
+          ...updatedWindows[id],
+          isOpen: true,
+          isMinimized: false,
+          isMaximized: true,
+          zIndex: newZIndex,
+        };
+
         return {
           windows: updatedWindows,
           activeWindow: id,
-          highestZIndex: newZIndex
+          highestZIndex: newZIndex,
         };
       }
-      
+
       if (isAppOpen) {
         return {
           windows: {
@@ -72,7 +94,7 @@ export const useOSStore = create<OSState>((set) => ({
           highestZIndex: newZIndex,
         };
       }
-      
+
       return {
         windows: {
           ...state.windows,
@@ -115,12 +137,14 @@ export const useOSStore = create<OSState>((set) => ({
 
   maximizeApp: (id) =>
     set((state) => {
+      if (id === "contact") return state;
+
       const willBeMaximized = !state.windows[id].isMaximized;
       const updatedWindows = { ...state.windows };
 
       if (willBeMaximized) {
-        (Object.keys(updatedWindows) as AppId[]).forEach(key => {
-          if (key !== id && updatedWindows[key].isOpen) {
+        (Object.keys(updatedWindows) as AppId[]).forEach((key) => {
+          if (key !== id && key !== "contact" && updatedWindows[key].isOpen) {
             updatedWindows[key] = { ...updatedWindows[key], isMinimized: true, isMaximized: false };
           }
         });

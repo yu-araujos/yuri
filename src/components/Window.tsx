@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { AppId, useOSStore } from "@/store/useOSStore";
 import { cn } from "@/lib/utils";
 import { AboutApp } from "./apps/AboutApp";
+import { ContactApp } from "./apps/ContactApp";
 
 import { X, Minus, Maximize2 } from "lucide-react";
 
@@ -20,7 +21,7 @@ export function Window({ id }: WindowProps) {
   const titleMap: Record<AppId, string> = {
     about: "About",
     projects: "Projects",
-    contact: "Contact",
+    contact: "contact.sh",
   };
 
   const offsets: Record<AppId, string> = {
@@ -56,6 +57,8 @@ export function Window({ id }: WindowProps) {
             "absolute flex flex-col overflow-hidden shadow-2xl ring-1 ring-black/10 dark:ring-white/10 transition-colors duration-500",
             isMaximized
               ? "inset-y-0 right-0 w-[calc(100%-4rem)] rounded-none border-none bg-stone-50 dark:bg-zinc-950"
+              : id === "contact"
+              ? "top-[20%] left-[10%] sm:left-[20%] md:left-[30%] w-[90%] max-w-xl h-auto rounded-xl bg-zinc-950 border border-zinc-800 shadow-2xl"
               : "top-[15%] left-[15%] w-[70%] h-[70%] max-w-4xl rounded-xl bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md border border-stone-200 dark:border-zinc-700/50",
           )}
         >
@@ -98,7 +101,7 @@ export function Window({ id }: WindowProps) {
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
                 className="flex items-center justify-between px-4 py-3 bg-stone-100/80 dark:bg-zinc-950/80 border-b border-stone-200 dark:border-zinc-800 cursor-move select-none transition-colors duration-500"
-                onDoubleClick={() => maximizeApp(id)}
+                onDoubleClick={() => id !== "contact" && maximizeApp(id)}
               >
                 <div className="flex items-center space-x-2">
                   <button
@@ -120,13 +123,21 @@ export function Window({ id }: WindowProps) {
                     <Minus className="w-2.5 h-2.5 text-yellow-950 opacity-0 group-hover:opacity-100 transition-opacity" />
                   </button>
                   <button
+                    disabled={id === "contact"}
                     onClick={(e) => {
                       e.stopPropagation();
-                      maximizeApp(id);
+                      if (id !== "contact") maximizeApp(id);
                     }}
-                    className="w-3.5 h-3.5 rounded-full bg-green-500 hover:bg-green-600 flex items-center justify-center group transition-colors"
+                    className={cn(
+                      "w-3.5 h-3.5 rounded-full flex items-center justify-center transition-colors",
+                      id === "contact"
+                        ? "bg-zinc-700/40 cursor-not-allowed"
+                        : "bg-green-500 hover:bg-green-600 group",
+                    )}
                   >
-                    <Maximize2 className="w-2.5 h-2.5 text-green-950 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    {id !== "contact" && (
+                      <Maximize2 className="w-2.5 h-2.5 text-green-950 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    )}
                   </button>
                 </div>
                 <div className="flex-1 text-center font-mono text-xs tracking-widest text-zinc-400 font-medium uppercase">
@@ -141,7 +152,9 @@ export function Window({ id }: WindowProps) {
             layout
             className={cn(
               "flex-1 overflow-y-auto font-sans text-zinc-700 dark:text-zinc-300 transition-colors duration-500",
-              isMaximized
+              id === "contact"
+                ? "bg-zinc-950 p-5 md:p-6"
+                : isMaximized
                 ? "bg-stone-50 dark:bg-zinc-950 p-12 md:p-24"
                 : "bg-stone-50/80 dark:bg-zinc-900/50 p-6 md:p-10",
             )}
@@ -149,18 +162,22 @@ export function Window({ id }: WindowProps) {
             <motion.div
               initial={false}
               animate={{ y: isMaximized ? 20 : 0, opacity: 1 }}
-              className={cn("mx-auto transition-all duration-300", isMaximized ? "max-w-6xl" : "max-w-4xl")}
+              className="max-w-4xl mx-auto"
             >
-              <h2
-                className={cn(
-                  "font-mono text-brand uppercase tracking-wider",
-                  isMaximized ? "text-5xl mb-10" : "text-3xl mb-6",
-                )}
-              >
-                {titleMap[id]}
-              </h2>
+              {id !== "contact" && (
+                <h2
+                  className={cn(
+                    "font-mono text-brand uppercase tracking-wider",
+                    isMaximized ? "text-5xl mb-10" : "text-3xl mb-6",
+                  )}
+                >
+                  {titleMap[id]}
+                </h2>
+              )}
               {id === "about" ? (
                 <AboutApp />
+              ) : id === "contact" ? (
+                <ContactApp />
               ) : (
                 <div className="space-y-4">
                   <p>Welcome to the {titleMap[id]} section.</p>

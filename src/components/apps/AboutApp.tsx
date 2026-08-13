@@ -98,22 +98,22 @@ export function AboutApp() {
   return (
     <div className="space-y-8 w-full pb-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
-        <div className="p-4 rounded-xl bg-stone-100 dark:bg-zinc-900/80 border border-stone-200 dark:border-zinc-800/80 flex items-center gap-3.5 transition-colors">
-          <div className="p-2.5 rounded-lg bg-brand/10 text-brand shrink-0 flex items-center justify-center">
+        <div className="p-3.5 sm:p-4 rounded-xl bg-stone-100 dark:bg-zinc-900/80 border border-stone-200 dark:border-zinc-800/80 flex items-center gap-3 transition-colors">
+          <div className="p-2 sm:p-2.5 rounded-lg bg-brand/10 text-brand shrink-0 flex items-center justify-center">
             <Briefcase className="w-4 h-4" />
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-[11px] font-mono text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
               Current Role
             </p>
-            <p className="text-xs sm:text-sm font-medium text-zinc-900 dark:text-zinc-100 mt-0.5 leading-snug">
+            <p className="text-xs sm:text-[13px] lg:text-sm font-medium text-zinc-900 dark:text-zinc-100 mt-0.5 leading-snug whitespace-nowrap">
               Software Engineer @ DACHSER
             </p>
           </div>
         </div>
 
-        <div className="p-4 rounded-xl bg-stone-100 dark:bg-zinc-900/80 border border-stone-200 dark:border-zinc-800/80 flex items-center gap-3.5 transition-colors">
-          <div className="relative flex h-2.5 w-2.5">
+        <div className="p-3.5 sm:p-4 rounded-xl bg-stone-100 dark:bg-zinc-900/80 border border-stone-200 dark:border-zinc-800/80 flex items-center gap-3 transition-colors">
+          <div className="relative flex h-2.5 w-2.5 shrink-0 ml-1">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
           </div>
@@ -121,22 +121,22 @@ export function AboutApp() {
             <p className="text-[11px] font-mono text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
               Status
             </p>
-            <p className="text-xs sm:text-sm font-medium text-zinc-900 dark:text-zinc-100 mt-0.5 leading-snug">
+            <p className="text-xs sm:text-[13px] lg:text-sm font-medium text-zinc-900 dark:text-zinc-100 mt-0.5 leading-snug whitespace-nowrap">
               Open for new opportunities
             </p>
           </div>
         </div>
 
-        <div className="p-4 rounded-xl bg-stone-100 dark:bg-zinc-900/80 border border-stone-200 dark:border-zinc-800/80 flex items-center justify-between gap-3 transition-colors">
-          <div className="flex items-center gap-3.5 min-w-0">
-            <div className="p-2.5 rounded-lg bg-brand/10 text-brand shrink-0 flex items-center justify-center">
+        <div className="p-3.5 sm:p-4 rounded-xl bg-stone-100 dark:bg-zinc-900/80 border border-stone-200 dark:border-zinc-800/80 flex items-center justify-between gap-2.5 transition-colors">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="p-2 sm:p-2.5 rounded-lg bg-brand/10 text-brand shrink-0 flex items-center justify-center">
               <MapPin className="w-4 h-4" />
             </div>
             <div className="min-w-0">
               <p className="text-[11px] font-mono text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                 Location
               </p>
-              <p className="text-xs sm:text-sm font-medium text-zinc-900 dark:text-zinc-100 mt-0.5 leading-snug">
+              <p className="text-xs sm:text-[13px] lg:text-sm font-medium text-zinc-900 dark:text-zinc-100 mt-0.5 leading-snug whitespace-nowrap">
                 Porto, Portugal
               </p>
             </div>
