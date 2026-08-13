@@ -54,12 +54,13 @@ export function Window({ id }: WindowProps) {
               : {}),
           }}
           className={cn(
-            "fixed md:absolute flex flex-col overflow-hidden shadow-2xl ring-1 ring-black/10 dark:ring-white/10 transition-colors duration-500",
+            "fixed md:absolute flex flex-col overflow-hidden transition-colors duration-500",
+            "top-14 bottom-0 left-0 right-0 w-full h-[calc(100vh-3.5rem)] rounded-none border-none shadow-none bg-stone-50 dark:bg-zinc-950",
             isMaximized
-              ? "inset-y-0 right-0 w-full md:w-[calc(100%-4rem)] rounded-none border-none bg-stone-50 dark:bg-zinc-950"
+              ? "md:inset-y-0 md:right-0 md:left-auto md:top-0 md:w-[calc(100%-4rem)] md:h-full md:rounded-none md:border-none"
               : id === "contact"
-              ? "top-[15%] md:top-[20%] left-3 right-3 md:left-[30%] mx-auto md:mx-0 w-[calc(100%-1.5rem)] md:w-full max-w-xl h-auto rounded-xl bg-zinc-950 border border-zinc-800 shadow-2xl"
-              : "top-14 md:top-[12%] bottom-0 md:bottom-auto left-0 right-0 md:left-[12%] md:right-auto w-full md:w-[76%] h-[calc(100vh-3.5rem)] md:h-[72%] max-w-5xl rounded-none md:rounded-xl border-none md:border border-stone-200 dark:border-zinc-700/50 bg-stone-50 dark:bg-zinc-950 md:bg-white/95 md:dark:bg-zinc-900/95 backdrop-blur-md",
+              ? "md:top-[20%] md:left-[30%] md:right-auto md:bottom-auto md:w-full md:max-w-xl md:h-auto md:rounded-xl md:bg-zinc-950 md:border md:border-zinc-800 md:shadow-2xl"
+              : "md:top-[12%] md:left-[12%] md:right-auto md:bottom-auto md:w-[76%] md:h-[72%] md:max-w-5xl md:rounded-xl md:border md:border-stone-200 md:dark:border-zinc-700/50 md:bg-white/95 md:dark:bg-zinc-900/95 md:backdrop-blur-md md:shadow-2xl",
           )}
         >
           {isMaximized && (

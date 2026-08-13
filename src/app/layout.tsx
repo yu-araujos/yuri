@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Press_Start_2P } from "next/font/google";
 import "./globals.css";
 import { ThemeSync } from "@/components/ThemeSync";
@@ -24,6 +24,17 @@ export const metadata: Metadata = {
   description: "Software Engineer",
 };
 
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#09090b" },
+    { media: "(prefers-color-scheme: light)", color: "#EAF4F7" },
+  ],
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  viewportFit: "cover",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -32,11 +43,11 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${pixelFont.variable} h-full antialiased dark`}
+      className={`${geistSans.variable} ${geistMono.variable} ${pixelFont.variable} h-full antialiased dark bg-light-surface dark:bg-zinc-950 transition-colors duration-500`}
       suppressHydrationWarning
     >
       <body
-        className="min-h-full flex flex-col bg-background text-foreground"
+        className="min-h-full flex flex-col bg-light-surface dark:bg-zinc-950 text-foreground transition-colors duration-500"
         suppressHydrationWarning
       >
         <ThemeSync />
