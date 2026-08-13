@@ -20,7 +20,7 @@ export function Desktop() {
       <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none select-none z-0">
         <TetrisText
           text="YURI SILVA"
-          className="text-3xl sm:text-6xl md:text-8xl text-brand tracking-widest text-center leading-tight px-4"
+          className="text-2xl sm:text-4xl md:text-5xl lg:text-7xl xl:text-8xl text-brand tracking-wider sm:tracking-widest text-center leading-tight px-4 max-w-[92vw]"
         />
         <p className="mt-2 sm:mt-4 text-zinc-600 dark:text-zinc-400 font-mono text-xs sm:text-sm tracking-widest uppercase text-center px-4">
           Software Engineer
