@@ -3,100 +3,211 @@
 import React, { useEffect, useRef } from "react";
 import { useOSStore } from "@/store/useOSStore";
 
-const DARK_BG = "#09090b";
-const DARK_STAR = "255,255,255";
-const LIGHT_BG = "#EAF4F7";
-const LIGHT_STAR = "30,25,60";
-
 export function Starfield() {
   const isDark = useOSStore((s) => s.isDark);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const hostRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    const el = hostRef.current;
+    if (!el) return;
+
+    const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
+    el.appendChild(canvas);
 
-    const bgColor = isDark ? DARK_BG : LIGHT_BG;
-    const starColor = isDark ? DARK_STAR : LIGHT_STAR;
+    const reduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
 
-    let width = window.innerWidth;
-    let height = window.innerHeight;
-    canvas.width = width;
-    canvas.height = height;
+    let w = 0;
+    let h = 0;
+    let rafId = 0;
+    let visible = true;
 
-    const stars: { x: number; y: number; z: number }[] = [];
-    const numStars = 500;
-    const speed = 2;
+    let N = 0;
+    let sx = new Float32Array(0);
+    let sy = new Float32Array(0);
+    let sz = new Float32Array(0);
 
-    for (let i = 0; i < numStars; i++) {
-      stars.push({
-        x: Math.random() * width * 2 - width,
-        y: Math.random() * height * 2 - height,
-        z: Math.random() * width,
-      });
-    }
+    const spawn = (i: number, deep: boolean) => {
+      sx[i] = Math.random() * 2 - 1;
+      sy[i] = Math.random() * 2 - 1;
+      sz[i] = deep ? 0.2 + Math.random() * 0.8 : 1;
+    };
 
-    let animationFrameId: number;
+    const alloc = () => {
+      N = Math.round(Math.min(750, Math.max(320, (w * h) / 620)));
+      sx = new Float32Array(N);
+      sy = new Float32Array(N);
+      sz = new Float32Array(N);
+      for (let i = 0; i < N; i++) spawn(i, true);
+    };
 
-    const render = () => {
-      ctx.fillStyle = bgColor;
-      ctx.fillRect(0, 0, width, height);
+    let cx = 0;
+    let cy = 0;
+    let tx = 0;
+    let ty = 0;
 
-      const cx = width / 2;
-      const cy = height / 2;
+    const SPEED = 0.005;
+    const FADE = 0.34;
 
-      for (let i = 0; i < numStars; i++) {
-        const star = stars[i];
+    const getColors = () => {
+      if (isDark) {
+        return {
+          bg: "9, 9, 11",
+          brand: "50, 199, 199",
+          bright: "200, 255, 245",
+          dimAlpha: 0.35,
+          brightAlpha: 0.8,
+        };
+      }
+      return {
+        bg: "234, 244, 247",
+        brand: "20, 24, 33",
+        bright: "0, 0, 0",
+        dimAlpha: 0.5,
+        brightAlpha: 0.9,
+      };
+    };
 
-        star.z -= speed;
+    const frame = () => {
+      const colors = getColors();
 
-        if (star.z <= 0) {
-          star.x = Math.random() * width * 2 - width;
-          star.y = Math.random() * height * 2 - height;
-          star.z = width;
+      cx += (tx - cx) * 0.012;
+      cy += (ty - cy) * 0.012;
+
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.fillStyle = `rgba(${colors.bg}, ${FADE})`;
+      ctx.fillRect(0, 0, w, h);
+
+      const f = Math.min(w, h) * 0.52;
+      const dim = new Path2D();
+      const bright = new Path2D();
+      let drewBright = false;
+
+      for (let i = 0; i < N; i++) {
+        const z0 = sz[i];
+        const z1 = z0 - SPEED * (0.35 + (1 - z0));
+        if (z1 < 0.06) {
+          spawn(i, false);
+          continue;
+        }
+        sz[i] = z1;
+
+        const x0 = cx + (sx[i] / z0) * f;
+        const y0 = cy + (sy[i] / z0) * f;
+        const x1 = cx + (sx[i] / z1) * f;
+        const y1 = cy + (sy[i] / z1) * f;
+
+        if ((x0 < -40 || x0 > w + 40 || y0 < -40 || y0 > h + 40) && z0 > 0.5) {
+          continue;
         }
 
-        const k = 128.0 / star.z;
-        const px = star.x * k + cx;
-        const py = star.y * k + cy;
-
-        const size = (1 - star.z / width) * 3;
-        const opacity = 1 - star.z / width;
-
-        if (px >= 0 && px <= width && py >= 0 && py <= height) {
-          ctx.beginPath();
-          ctx.fillStyle = `rgba(${starColor}, ${opacity})`;
-          ctx.arc(px, py, size, 0, Math.PI * 2);
-          ctx.fill();
+        if (z1 < 0.35) {
+          bright.moveTo(x0, y0);
+          bright.lineTo(x1, y1);
+          drewBright = true;
+        } else {
+          dim.moveTo(x0, y0);
+          dim.lineTo(x1, y1);
         }
       }
 
-      animationFrameId = requestAnimationFrame(render);
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = `rgba(${colors.brand}, ${colors.dimAlpha})`;
+      ctx.stroke(dim);
+
+      if (drewBright) {
+        ctx.lineWidth = 1.3;
+        ctx.strokeStyle = `rgba(${colors.bright}, ${colors.brightAlpha})`;
+        ctx.stroke(bright);
+      }
     };
 
-    render();
+    const resize = () => {
+      const r = el.getBoundingClientRect();
+      w = Math.max(1, Math.floor(r.width || window.innerWidth));
+      h = Math.max(1, Math.floor(r.height || window.innerHeight));
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+      canvas.style.width = `${w}px`;
+      canvas.style.height = `${h}px`;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    const handleResize = () => {
-      width = window.innerWidth;
-      height = window.innerHeight;
-      canvas.width = width;
-      canvas.height = height;
+      const colors = getColors();
+      ctx.fillStyle = `rgb(${colors.bg})`;
+      ctx.fillRect(0, 0, w, h);
+      cx = tx = w / 2;
+      cy = ty = h / 2;
+      alloc();
     };
 
-    window.addEventListener("resize", handleResize);
+    resize();
+
+    const tick = () => {
+      if (visible) frame();
+      rafId = requestAnimationFrame(tick);
+    };
+
+    if (reduced) {
+      for (let k = 0; k < 12; k++) frame();
+    } else {
+      rafId = requestAnimationFrame(tick);
+    }
+
+    const onMove = (e: PointerEvent) => {
+      const r = canvas.getBoundingClientRect();
+      const mouseX = e.clientX - r.left;
+      const mouseY = e.clientY - r.top;
+      const midX = w / 2;
+      const midY = h / 2;
+      tx = midX + (mouseX - midX) * 0.45;
+      ty = midY + (mouseY - midY) * 0.45;
+    };
+
+    const onLeave = () => {
+      tx = w / 2;
+      ty = h / 2;
+    };
+
+    if (!reduced) {
+      window.addEventListener("pointermove", onMove);
+      window.addEventListener("pointerleave", onLeave);
+    }
+
+    const ro = new ResizeObserver(() => {
+      resize();
+      if (reduced) for (let k = 0; k < 12; k++) frame();
+    });
+    ro.observe(el);
+
+    const vio = new IntersectionObserver(
+      (entries) => {
+        visible = entries[0]?.isIntersecting ?? false;
+      },
+      { threshold: 0 },
+    );
+    vio.observe(el);
 
     return () => {
-      window.removeEventListener("resize", handleResize);
-      cancelAnimationFrame(animationFrameId);
+      cancelAnimationFrame(rafId);
+      ro.disconnect();
+      vio.disconnect();
+      if (!reduced) {
+        window.removeEventListener("pointermove", onMove);
+        window.removeEventListener("pointerleave", onLeave);
+      }
+      canvas.remove();
     };
   }, [isDark]);
 
   return (
-    <canvas
-      ref={canvasRef}
-      className="absolute inset-0 pointer-events-none z-0"
+    <div
+      ref={hostRef}
+      className="fixed inset-0 pointer-events-none z-0 overflow-hidden"
+      aria-hidden="true"
     />
   );
 }
