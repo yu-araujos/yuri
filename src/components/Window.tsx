@@ -52,7 +52,7 @@ export function Window({ id }: WindowProps) {
           }}
           className={cn(
             "fixed md:absolute flex flex-col overflow-hidden transition-colors duration-500",
-            "inset-0 w-full h-full pt-[calc(3.75rem+env(safe-area-inset-top,0px))] rounded-none border-none shadow-none bg-light-surface dark:bg-zinc-950",
+            "inset-0 w-full h-full pt-[calc(3.75rem+env(safe-area-inset-top,0px))] md:pt-0 rounded-none border-none shadow-none bg-light-surface dark:bg-zinc-950",
             isMaximized
               ? "md:inset-y-0 md:right-0 md:left-auto md:top-0 md:w-[calc(100%-4rem)] md:h-full md:rounded-none md:border-none"
               : id === "contact"
@@ -98,7 +98,12 @@ export function Window({ id }: WindowProps) {
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
-                className="hidden md:flex items-center justify-between px-4 py-3 bg-stone-100/80 dark:bg-zinc-950/80 border-b border-stone-200 dark:border-zinc-800 cursor-move select-none transition-colors duration-500"
+                className={cn(
+                  "hidden md:flex items-center justify-between px-4 py-3 cursor-move select-none transition-colors duration-500",
+                  id === "contact"
+                    ? "bg-zinc-900 border-b border-zinc-800 text-zinc-300"
+                    : "bg-stone-100/80 dark:bg-zinc-950/80 border-b border-stone-200 dark:border-zinc-800",
+                )}
                 onDoubleClick={() => id !== "contact" && maximizeApp(id)}
               >
                 <div className="flex items-center space-x-2">
@@ -151,10 +156,10 @@ export function Window({ id }: WindowProps) {
             className={cn(
               "flex-1 overflow-y-auto font-sans text-zinc-700 dark:text-zinc-300 transition-colors duration-500",
               id === "contact"
-                ? "bg-light-surface dark:bg-zinc-950 md:bg-zinc-950 px-5 pt-6 pb-12 md:p-6"
+                ? "bg-zinc-950 text-zinc-100 px-5 pt-6 pb-12 md:p-6"
                 : isMaximized
-                ? "bg-light-surface dark:bg-zinc-950 p-6 md:p-24"
-                : "bg-light-surface dark:bg-zinc-950 md:bg-stone-50/80 md:dark:bg-zinc-900/50 px-5 pt-6 pb-12 md:p-10",
+                ? "bg-light-surface dark:bg-zinc-950 p-6 md:p-16"
+                : "bg-light-surface dark:bg-zinc-950 md:bg-stone-50/80 md:dark:bg-zinc-900/50 px-5 pt-6 pb-12 md:p-8",
             )}
           >
             <motion.div

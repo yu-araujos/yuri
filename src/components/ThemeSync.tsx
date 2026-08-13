@@ -19,29 +19,31 @@ export function ThemeSync() {
     root.style.backgroundColor = themeColor;
     document.body.style.backgroundColor = themeColor;
 
-    document
-      .querySelectorAll('meta[name="theme-color"]')
-      .forEach((el) => el.remove());
+    const themeMetaElements = document.querySelectorAll('meta[name="theme-color"]');
+    if (themeMetaElements.length > 0) {
+      themeMetaElements.forEach((el) => {
+        el.setAttribute("content", themeColor);
+      });
+    } else {
+      const meta = document.createElement("meta");
+      meta.name = "theme-color";
+      meta.content = themeColor;
+      document.head.appendChild(meta);
+    }
 
-    const metaThemeColor = document.createElement("meta");
-    metaThemeColor.setAttribute("name", "theme-color");
-    metaThemeColor.setAttribute("content", themeColor);
-    document.head.appendChild(metaThemeColor);
-
-    document
-      .querySelectorAll('meta[name="apple-mobile-web-app-status-bar-style"]')
-      .forEach((el) => el.remove());
-
-    const metaAppleStatus = document.createElement("meta");
-    metaAppleStatus.setAttribute(
-      "name",
-      "apple-mobile-web-app-status-bar-style"
+    const appleStatusElements = document.querySelectorAll(
+      'meta[name="apple-mobile-web-app-status-bar-style"]'
     );
-    metaAppleStatus.setAttribute(
-      "content",
-      isDark ? "black-translucent" : "default"
-    );
-    document.head.appendChild(metaAppleStatus);
+    if (appleStatusElements.length > 0) {
+      appleStatusElements.forEach((el) => {
+        el.setAttribute("content", isDark ? "black-translucent" : "default");
+      });
+    } else {
+      const meta = document.createElement("meta");
+      meta.name = "apple-mobile-web-app-status-bar-style";
+      meta.content = isDark ? "black-translucent" : "default";
+      document.head.appendChild(meta);
+    }
   }, [isDark]);
 
   return null;
