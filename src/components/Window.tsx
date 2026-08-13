@@ -56,10 +56,10 @@ export function Window({ id }: WindowProps) {
           className={cn(
             "absolute flex flex-col overflow-hidden shadow-2xl ring-1 ring-black/10 dark:ring-white/10 transition-colors duration-500",
             isMaximized
-              ? "inset-y-0 right-0 w-[calc(100%-4rem)] rounded-none border-none bg-stone-50 dark:bg-zinc-950"
+              ? "inset-y-0 right-0 w-full md:w-[calc(100%-4rem)] rounded-none border-none bg-stone-50 dark:bg-zinc-950"
               : id === "contact"
-              ? "top-[20%] left-[10%] sm:left-[20%] md:left-[30%] w-[90%] max-w-xl h-auto rounded-xl bg-zinc-950 border border-zinc-800 shadow-2xl"
-              : "top-[15%] left-[15%] w-[70%] h-[70%] max-w-4xl rounded-xl bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md border border-stone-200 dark:border-zinc-700/50",
+              ? "top-[12%] sm:top-[20%] left-3 right-3 md:left-[30%] mx-auto md:mx-0 w-[calc(100%-1.5rem)] md:w-full max-w-xl h-auto rounded-xl bg-zinc-950 border border-zinc-800 shadow-2xl"
+              : "top-4 sm:top-8 md:top-[12%] bottom-24 sm:bottom-28 md:bottom-auto left-3 right-3 md:left-[12%] md:right-auto w-[calc(100%-1.5rem)] md:w-[76%] md:h-[72%] max-w-5xl rounded-xl bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md border border-stone-200 dark:border-zinc-700/50",
           )}
         >
           {isMaximized && (

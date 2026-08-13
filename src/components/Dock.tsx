@@ -31,10 +31,10 @@ export function Dock() {
     <motion.div
       layout
       className={cn(
-        "z-50 flex",
+        "z-50 flex max-w-[95vw]",
         isAnyMaximized
-          ? "absolute left-0 top-0 h-full w-16 bg-white/80 dark:bg-zinc-950/80 border-r border-stone-200 dark:border-zinc-800/60 backdrop-blur-xl flex-col items-center py-6 shadow-2xl"
-          : "absolute bottom-8 left-1/2 -translate-x-1/2",
+          ? "absolute left-0 top-0 h-full w-14 md:w-16 bg-white/80 dark:bg-zinc-950/80 border-r border-stone-200 dark:border-zinc-800/60 backdrop-blur-xl flex-col items-center py-4 md:py-6 shadow-2xl"
+          : "absolute bottom-4 sm:bottom-8 left-1/2 -translate-x-1/2",
       )}
       onMouseMove={(e) => !isAnyMaximized && mouseX.set(e.pageX)}
       onMouseLeave={() => !isAnyMaximized && mouseX.set(Infinity)}
@@ -44,7 +44,7 @@ export function Dock() {
           onClick={returnToDesktop}
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-brand text-xl mb-8 tracking-tighter hover:text-brand/70 transition-colors cursor-pointer"
+          className="text-brand text-lg md:text-xl mb-6 md:mb-8 tracking-tighter hover:text-brand/70 transition-colors cursor-pointer"
           style={{ fontFamily: "var(--font-pixel)" }}
         >
           YS
@@ -54,10 +54,10 @@ export function Dock() {
       <motion.div
         layout
         className={cn(
-          "flex gap-6 transition-colors duration-500",
+          "flex transition-colors duration-500",
           isAnyMaximized
-            ? "flex-col items-center w-full"
-            : "h-24 items-end rounded-3xl bg-white/70 dark:bg-zinc-950/60 border border-stone-200 dark:border-zinc-800/60 px-8 pb-4 backdrop-blur-xl shadow-2xl",
+            ? "flex-col items-center w-full gap-4 md:gap-6"
+            : "h-20 sm:h-24 items-end rounded-2xl sm:rounded-3xl bg-white/70 dark:bg-zinc-950/60 border border-stone-200 dark:border-zinc-800/60 px-4 sm:px-8 pb-3 sm:pb-4 backdrop-blur-xl shadow-2xl gap-3 sm:gap-6",
         )}
       >
         {APPS.map((app) => (

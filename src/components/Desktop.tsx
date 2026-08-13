@@ -19,9 +19,9 @@ export function Desktop() {
       <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none select-none z-0">
         <TetrisText
           text="YURI SILVA"
-          className="text-5xl md:text-8xl text-brand tracking-widest text-center leading-tight"
+          className="text-3xl sm:text-6xl md:text-8xl text-brand tracking-widest text-center leading-tight px-4"
         />
-        <p className="mt-4 text-zinc-600 dark:text-zinc-400 font-mono text-sm tracking-widest uppercase">
+        <p className="mt-2 sm:mt-4 text-zinc-600 dark:text-zinc-400 font-mono text-xs sm:text-sm tracking-widest uppercase text-center px-4">
           Software Engineer
         </p>
       </div>
@@ -33,7 +33,7 @@ export function Desktop() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
-            className="absolute inset-y-0 right-0 w-[calc(100%-4rem)] bg-zinc-950 z-0"
+            className="absolute inset-y-0 right-0 w-full md:w-[calc(100%-4rem)] bg-stone-50 dark:bg-zinc-950 z-0"
           />
         )}
       </AnimatePresence>
