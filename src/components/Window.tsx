@@ -17,6 +17,14 @@ export function Window({ id }: WindowProps) {
   const windowState = useOSStore((state) => state.windows[id]);
   const { closeApp, minimizeApp, maximizeApp, focusApp } = useOSStore();
   const { isMinimized, isMaximized } = windowState;
+  const [isDesktop, setIsDesktop] = React.useState(false);
+
+  React.useEffect(() => {
+    const checkDesktop = () => setIsDesktop(window.innerWidth >= 768);
+    checkDesktop();
+    window.addEventListener("resize", checkDesktop);
+    return () => window.removeEventListener("resize", checkDesktop);
+  }, []);
 
   const titleMap: Record<AppId, string> = {
     about: "About",
@@ -24,40 +32,35 @@ export function Window({ id }: WindowProps) {
     contact: "contact.sh",
   };
 
-  const offsets: Record<AppId, string> = {
-    about: "0px",
-    projects: "32px",
-    contact: "64px",
-  };
-
   return (
     <AnimatePresence>
       {windowState.isOpen && !isMinimized && (
         <motion.div
-          layout
-          drag={!isMaximized}
+          layout={isDesktop}
+          drag={isDesktop && !isMaximized}
           dragMomentum={false}
           onMouseDown={() => focusApp(id)}
-          initial={{ opacity: 0, scale: isMaximized ? 1 : 0.95 }}
+          initial={{ opacity: 0, scale: isDesktop && !isMaximized ? 0.95 : 1 }}
           animate={{
             opacity: 1,
             scale: 1,
-            x: isMaximized ? 0 : undefined,
-            y: isMaximized ? 0 : undefined,
+            x: 0,
+            y: 0,
           }}
-          exit={{ opacity: 0, scale: isMaximized ? 1 : 0.95 }}
-          transition={{ type: "spring", bounce: 0, duration: 0.5 }}
+          exit={{ opacity: 0, scale: isDesktop && !isMaximized ? 0.95 : 1 }}
+          transition={{ type: "spring", bounce: 0, duration: 0.4 }}
           style={{
             zIndex: windowState.zIndex,
           }}
           className={cn(
-            "fixed md:absolute flex flex-col overflow-hidden transition-colors duration-500",
-            "inset-0 w-full h-full pt-[calc(3.75rem+env(safe-area-inset-top,0px))] md:pt-0 rounded-none border-none shadow-none bg-light-surface dark:bg-zinc-950",
-            isMaximized
-              ? "md:inset-y-0 md:right-0 md:left-auto md:top-0 md:w-[calc(100%-4rem)] md:h-full md:rounded-none md:border-none"
+            "fixed flex flex-col overflow-hidden transition-colors duration-500",
+            !isDesktop
+              ? "inset-0 w-full h-full rounded-none border-none shadow-none bg-light-surface dark:bg-zinc-950 pt-[calc(3.75rem+env(safe-area-inset-top,0px))]"
+              : isMaximized
+              ? "inset-y-0 right-0 w-[calc(100%-4rem)] h-full rounded-none border-none bg-stone-50 dark:bg-zinc-950"
               : id === "contact"
-              ? "md:top-[20%] md:left-[30%] md:right-auto md:bottom-auto md:w-full md:max-w-xl md:h-auto md:rounded-xl md:bg-zinc-950 md:border md:border-zinc-800 md:shadow-2xl md:mt-16 md:ml-16"
-              : "md:top-[12%] md:left-[12%] md:right-auto md:bottom-auto md:w-[76%] md:h-[72%] md:max-w-5xl md:rounded-xl md:border md:border-stone-200 md:dark:border-zinc-700/50 md:bg-white/95 md:dark:bg-zinc-900/95 md:backdrop-blur-md md:shadow-2xl",
+              ? "top-[20%] left-[30%] w-full max-w-xl h-auto rounded-xl bg-zinc-950 border border-zinc-800 shadow-2xl"
+              : "top-[12%] left-[12%] w-[76%] h-[72%] max-w-5xl rounded-xl border border-stone-200 dark:border-zinc-700/50 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md shadow-2xl",
           )}
         >
           {isMaximized && (
