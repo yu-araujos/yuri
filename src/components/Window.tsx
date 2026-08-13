@@ -4,6 +4,7 @@ import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AppId, useOSStore } from "@/store/useOSStore";
 import { cn } from "@/lib/utils";
+import { AboutApp } from "./apps/AboutApp";
 
 import { X, Minus, Maximize2 } from "lucide-react";
 
@@ -158,12 +159,16 @@ export function Window({ id }: WindowProps) {
               >
                 {titleMap[id]}
               </h2>
-              <div className="space-y-4">
-                <p>Welcome to the {titleMap[id]} section.</p>
-                <p className="text-zinc-500">
-                  (The real content for this tab will be added here soon...)
-                </p>
-              </div>
+              {id === "about" ? (
+                <AboutApp />
+              ) : (
+                <div className="space-y-4">
+                  <p>Welcome to the {titleMap[id]} section.</p>
+                  <p className="text-zinc-500">
+                    (The real content for this tab will be added here soon...)
+                  </p>
+                </div>
+              )}
             </motion.div>
           </motion.div>
         </motion.div>

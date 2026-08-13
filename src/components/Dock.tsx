@@ -8,14 +8,14 @@ import {
   useTransform,
   useSpring,
 } from "framer-motion";
-import { User, Mail, FolderGit2, Sun, Moon } from "lucide-react";
+import { User, AtSign, FolderGit2, Sun, Moon } from "lucide-react";
 import { useOSStore, AppId } from "@/store/useOSStore";
 import { cn } from "@/lib/utils";
 
 const APPS = [
   { id: "about" as AppId, label: "About", icon: User },
   { id: "projects" as AppId, label: "Projects", icon: FolderGit2 },
-  { id: "contact" as AppId, label: "Contact", icon: Mail },
+  { id: "contact" as AppId, label: "Contact", icon: AtSign },
 ];
 
 export function Dock() {
