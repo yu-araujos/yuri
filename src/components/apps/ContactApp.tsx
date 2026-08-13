@@ -65,7 +65,7 @@ export function ContactApp() {
               <div className="flex items-center space-x-2 shrink-0">
                 <button
                   onClick={() => handleCopy(link.url, link.name)}
-                  className="px-3 py-2 rounded-lg text-xs bg-stone-200/80 dark:bg-zinc-800 md:bg-zinc-800 hover:bg-stone-300 dark:hover:bg-zinc-700 md:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 md:text-zinc-300 transition-colors flex items-center space-x-1.5 font-mono"
+                  className="hidden sm:flex items-center space-x-1.5 px-3 py-2 rounded-lg text-xs bg-stone-200/80 dark:bg-zinc-800 md:bg-zinc-800 hover:bg-stone-300 dark:hover:bg-zinc-700 md:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 md:text-zinc-300 transition-colors font-mono"
                   title="Copy URL"
                 >
                   {isCopied ? (
