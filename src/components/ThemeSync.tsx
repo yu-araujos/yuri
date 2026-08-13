@@ -16,6 +16,9 @@ export function ThemeSync() {
       root.classList.remove("dark");
     }
 
+    root.style.backgroundColor = themeColor;
+    document.body.style.backgroundColor = themeColor;
+
     document
       .querySelectorAll('meta[name="theme-color"]')
       .forEach((el) => el.remove());
