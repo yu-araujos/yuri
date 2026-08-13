@@ -49,17 +49,14 @@ export function Window({ id }: WindowProps) {
           transition={{ type: "spring", bounce: 0, duration: 0.5 }}
           style={{
             zIndex: windowState.zIndex,
-            ...(!isMaximized
-              ? { marginTop: offsets[id], marginLeft: offsets[id] }
-              : {}),
           }}
           className={cn(
             "fixed md:absolute flex flex-col overflow-hidden transition-colors duration-500",
-            "top-14 bottom-0 left-0 right-0 w-full h-[calc(100vh-3.5rem)] rounded-none border-none shadow-none bg-stone-50 dark:bg-zinc-950",
+            "inset-0 w-full h-full pt-[calc(3.75rem+env(safe-area-inset-top,0px))] rounded-none border-none shadow-none bg-light-surface dark:bg-zinc-950",
             isMaximized
               ? "md:inset-y-0 md:right-0 md:left-auto md:top-0 md:w-[calc(100%-4rem)] md:h-full md:rounded-none md:border-none"
               : id === "contact"
-              ? "md:top-[20%] md:left-[30%] md:right-auto md:bottom-auto md:w-full md:max-w-xl md:h-auto md:rounded-xl md:bg-zinc-950 md:border md:border-zinc-800 md:shadow-2xl"
+              ? "md:top-[20%] md:left-[30%] md:right-auto md:bottom-auto md:w-full md:max-w-xl md:h-auto md:rounded-xl md:bg-zinc-950 md:border md:border-zinc-800 md:shadow-2xl md:mt-16 md:ml-16"
               : "md:top-[12%] md:left-[12%] md:right-auto md:bottom-auto md:w-[76%] md:h-[72%] md:max-w-5xl md:rounded-xl md:border md:border-stone-200 md:dark:border-zinc-700/50 md:bg-white/95 md:dark:bg-zinc-900/95 md:backdrop-blur-md md:shadow-2xl",
           )}
         >
@@ -154,10 +151,10 @@ export function Window({ id }: WindowProps) {
             className={cn(
               "flex-1 overflow-y-auto font-sans text-zinc-700 dark:text-zinc-300 transition-colors duration-500",
               id === "contact"
-                ? "bg-zinc-950 p-4 sm:p-5 md:p-6"
+                ? "bg-light-surface dark:bg-zinc-950 md:bg-zinc-950 px-5 pt-6 pb-12 md:p-6"
                 : isMaximized
-                ? "bg-stone-50 dark:bg-zinc-950 p-6 md:p-24"
-                : "bg-stone-50 dark:bg-zinc-950 md:bg-stone-50/80 md:dark:bg-zinc-900/50 p-4 sm:p-6 md:p-10",
+                ? "bg-light-surface dark:bg-zinc-950 p-6 md:p-24"
+                : "bg-light-surface dark:bg-zinc-950 md:bg-stone-50/80 md:dark:bg-zinc-900/50 px-5 pt-6 pb-12 md:p-10",
             )}
           >
             <motion.div
@@ -165,16 +162,18 @@ export function Window({ id }: WindowProps) {
               animate={{ y: isMaximized ? 20 : 0, opacity: 1 }}
               className="max-w-4xl mx-auto"
             >
-              {id !== "contact" && (
-                <h2
-                  className={cn(
-                    "font-mono text-brand uppercase tracking-wider",
-                    isMaximized ? "text-3xl md:text-5xl mb-6 md:mb-10" : "text-2xl md:text-3xl mb-4 md:mb-6",
-                  )}
-                >
-                  {titleMap[id]}
-                </h2>
-              )}
+              <h2
+                className={cn(
+                  "font-mono text-brand uppercase tracking-wider",
+                  id === "contact"
+                    ? "block md:hidden text-2xl mb-4"
+                    : isMaximized
+                    ? "text-3xl md:text-5xl mb-6 md:mb-10"
+                    : "text-2xl md:text-3xl mb-4 md:mb-6",
+                )}
+              >
+                {titleMap[id]}
+              </h2>
               {id === "about" ? (
                 <AboutApp />
               ) : id === "contact" ? (

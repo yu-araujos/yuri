@@ -96,10 +96,10 @@ export function AboutApp() {
   ];
 
   return (
-    <div className="space-y-8 w-full pb-6">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
-        <div className="p-3.5 sm:p-4 rounded-xl bg-stone-100 dark:bg-zinc-900/80 border border-stone-200 dark:border-zinc-800/80 flex items-center gap-3 transition-colors">
-          <div className="p-2 sm:p-2.5 rounded-lg bg-brand/10 text-brand shrink-0 flex items-center justify-center">
+    <div className="space-y-10 sm:space-y-12 w-full pb-12">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5">
+        <div className="p-4 sm:p-5 rounded-2xl bg-stone-100 dark:bg-zinc-900/80 border border-stone-200 dark:border-zinc-800/80 flex items-center gap-3.5 transition-colors">
+          <div className="p-2.5 rounded-xl bg-brand/10 text-brand shrink-0 flex items-center justify-center">
             <Briefcase className="w-4 h-4" />
           </div>
           <div className="flex-1 min-w-0">
@@ -112,7 +112,7 @@ export function AboutApp() {
           </div>
         </div>
 
-        <div className="p-3.5 sm:p-4 rounded-xl bg-stone-100 dark:bg-zinc-900/80 border border-stone-200 dark:border-zinc-800/80 flex items-center gap-3 transition-colors">
+        <div className="p-4 sm:p-5 rounded-2xl bg-stone-100 dark:bg-zinc-900/80 border border-stone-200 dark:border-zinc-800/80 flex items-center gap-3.5 transition-colors">
           <div className="relative flex h-2.5 w-2.5 shrink-0 ml-1">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
@@ -127,9 +127,9 @@ export function AboutApp() {
           </div>
         </div>
 
-        <div className="p-3.5 sm:p-4 rounded-xl bg-stone-100 dark:bg-zinc-900/80 border border-stone-200 dark:border-zinc-800/80 flex items-center justify-between gap-2.5 transition-colors">
-          <div className="flex items-center gap-2.5 min-w-0">
-            <div className="p-2 sm:p-2.5 rounded-lg bg-brand/10 text-brand shrink-0 flex items-center justify-center">
+        <div className="p-4 sm:p-5 rounded-2xl bg-stone-100 dark:bg-zinc-900/80 border border-stone-200 dark:border-zinc-800/80 flex items-center justify-between gap-3 transition-colors">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="p-2.5 rounded-xl bg-brand/10 text-brand shrink-0 flex items-center justify-center">
               <MapPin className="w-4 h-4" />
             </div>
             <div className="min-w-0">
@@ -153,7 +153,7 @@ export function AboutApp() {
         </div>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-4">
         <h3 className="text-lg font-mono text-zinc-900 dark:text-zinc-100 font-semibold flex items-center space-x-2">
           <Terminal className="w-5 h-5 text-brand" />
           <span>About Me</span>
@@ -192,11 +192,11 @@ export function AboutApp() {
         </p>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-5">
         {stats.map((stat, idx) => (
           <div
             key={idx}
-            className="p-3.5 rounded-xl bg-stone-100/70 dark:bg-zinc-900/50 border border-stone-200/80 dark:border-zinc-800/60 text-center transition-all hover:border-brand/40 flex flex-col justify-between h-28"
+            className="p-4 sm:p-5 rounded-2xl bg-stone-100/70 dark:bg-zinc-900/50 border border-stone-200/80 dark:border-zinc-800/60 text-center transition-all hover:border-brand/40 flex flex-col justify-between h-32"
           >
             <div className="flex-1 flex items-center justify-center">
               <p className="text-xl md:text-2xl font-mono font-bold text-brand leading-tight">
@@ -210,22 +210,22 @@ export function AboutApp() {
         ))}
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-5">
         <h3 className="text-lg font-mono text-zinc-900 dark:text-zinc-100 font-semibold flex items-center space-x-2">
           <Cpu className="w-5 h-5 text-brand" />
           <span>Tech Stack & Competencies</span>
         </h3>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
           {techCategories.map((cat, idx) => (
             <div
               key={idx}
-              className="p-4 rounded-xl bg-stone-100 dark:bg-zinc-900/60 border border-stone-200 dark:border-zinc-800/80 space-y-3"
+              className="p-5 sm:p-6 rounded-2xl bg-stone-100 dark:bg-zinc-900/60 border border-stone-200 dark:border-zinc-800/80 space-y-4"
             >
               <h4 className="text-xs font-mono text-brand uppercase tracking-wider font-bold">
                 {cat.title}
               </h4>
-              <ul className="space-y-1.5">
+              <ul className="space-y-2">
                 {cat.skills.map((skill, sIdx) => (
                   <li
                     key={sIdx}
@@ -241,18 +241,18 @@ export function AboutApp() {
         </div>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-6">
         <h3 className="text-lg font-mono text-zinc-900 dark:text-zinc-100 font-semibold flex items-center space-x-2">
           <GitCommit className="w-5 h-5 text-brand" />
           <span>Experience Log</span>
         </h3>
 
-        <div className="relative pl-6 space-y-6 border-l-2 border-stone-200 dark:border-zinc-800">
+        <div className="relative pl-6 sm:pl-8 space-y-8 sm:space-y-10 border-l-2 border-stone-200 dark:border-zinc-800">
           {timeline.map((item, idx) => (
             <div key={idx} className="relative group">
-              <div className="absolute -left-[31px] top-1.5 w-3 h-3 rounded-full bg-stone-300 dark:bg-zinc-700 group-hover:bg-brand transition-colors border-2 border-stone-50 dark:border-zinc-950" />
+              <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-3.5 h-3.5 rounded-full bg-stone-300 dark:bg-zinc-700 group-hover:bg-brand transition-colors border-2 border-stone-50 dark:border-zinc-950" />
 
-              <div className="space-y-2">
+              <div className="space-y-2.5">
                 <div className="flex flex-wrap items-center gap-2 font-mono text-xs text-zinc-500">
                   <span className="text-brand font-semibold">{item.hash}</span>
                   <span>•</span>
@@ -270,7 +270,7 @@ export function AboutApp() {
                   </h4>
                 </div>
                 <p className="text-xs font-mono text-zinc-500">{item.type}</p>
-                <ul className="space-y-1 mt-2">
+                <ul className="space-y-1.5 mt-2.5">
                   {item.bullets.map((bullet, bIdx) => (
                     <li
                       key={bIdx}
@@ -287,27 +287,27 @@ export function AboutApp() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="p-4 rounded-xl bg-stone-100 dark:bg-zinc-900/60 border border-stone-200 dark:border-zinc-800/80 space-y-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
+        <div className="p-5 sm:p-6 rounded-2xl bg-stone-100 dark:bg-zinc-900/60 border border-stone-200 dark:border-zinc-800/80 space-y-3">
           <div className="flex items-center space-x-2 text-brand font-mono text-xs font-bold uppercase tracking-wider">
             <GraduationCap className="w-4 h-4" />
             <span>Education</span>
           </div>
-          <h4 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+          <h4 className="text-sm sm:text-base font-semibold text-zinc-900 dark:text-zinc-100">
             FIAP
           </h4>
-          <p className="text-xs text-zinc-600 dark:text-zinc-400">
+          <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400">
             Associate&apos;s Degree, Systems Analysis and Development
           </p>
           <p className="text-xs font-mono text-zinc-500">Feb 2021 – Feb 2025</p>
         </div>
 
-        <div className="p-4 rounded-xl bg-stone-100 dark:bg-zinc-900/60 border border-stone-200 dark:border-zinc-800/80 space-y-2">
+        <div className="p-5 sm:p-6 rounded-2xl bg-stone-100 dark:bg-zinc-900/60 border border-stone-200 dark:border-zinc-800/80 space-y-3">
           <div className="flex items-center space-x-2 text-brand font-mono text-xs font-bold uppercase tracking-wider">
             <Languages className="w-4 h-4" />
             <span>Languages</span>
           </div>
-          <ul className="space-y-1.5 text-xs md:text-sm text-zinc-700 dark:text-zinc-300">
+          <ul className="space-y-2 text-xs md:text-sm text-zinc-700 dark:text-zinc-300">
             <li className="flex items-center justify-between">
               <span>Portuguese</span>
               <span className="font-mono text-xs text-zinc-500">Native</span>

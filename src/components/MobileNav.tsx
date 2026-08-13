@@ -14,7 +14,7 @@ const NAV_ITEMS = [
 
 export function MobileNav() {
   const [isOpen, setIsOpen] = useState(false);
-  const { openApp, windows, returnToDesktop, toggleTheme, isDark } = useOSStore();
+  const { openApp, closeApp, windows, returnToDesktop, toggleTheme, isDark } = useOSStore();
 
   const activeAppId = Object.values(windows).find(
     (w) => w.isOpen && !w.isMinimized
@@ -22,13 +22,16 @@ export function MobileNav() {
 
   const handleSelect = (id: AppId, disabled?: boolean) => {
     if (disabled) return;
+    (Object.keys(windows) as AppId[]).forEach((key) => {
+      if (key !== id) closeApp(key);
+    });
     openApp(id);
     setIsOpen(false);
   };
 
   return (
     <div className="md:hidden">
-      <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 py-3 bg-stone-50/80 dark:bg-zinc-950/80 border-b border-stone-200 dark:border-zinc-800/80 backdrop-blur-xl transition-colors duration-500">
+      <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 pb-3 pt-[calc(0.75rem+env(safe-area-inset-top,0px))] bg-light-surface dark:bg-zinc-950 border-b border-stone-200 dark:border-zinc-800/80 backdrop-blur-xl transition-colors duration-500">
         <button
           onClick={() => {
             returnToDesktop();
@@ -66,7 +69,7 @@ export function MobileNav() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed inset-0 z-40 bg-stone-50/95 dark:bg-zinc-950/95 backdrop-blur-2xl flex flex-col justify-between p-6 pt-20 font-sans"
+            className="fixed inset-0 z-40 bg-light-surface/95 dark:bg-zinc-950/95 backdrop-blur-2xl flex flex-col justify-between p-6 pt-[calc(5rem+env(safe-area-inset-top,0px))] font-sans"
           >
             <div className="space-y-6">
               <p className="text-xs font-mono text-zinc-400 uppercase tracking-widest px-2">
