@@ -1,8 +1,15 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
+import { useOSStore } from "@/store/useOSStore";
+
+const DARK_BG = "#09090b";
+const DARK_STAR = "255,255,255";
+const LIGHT_BG = "#EAF4F7";
+const LIGHT_STAR = "30,25,60";
 
 export function Starfield() {
+  const isDark = useOSStore((s) => s.isDark);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -11,14 +18,17 @@ export function Starfield() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    const bgColor = isDark ? DARK_BG : LIGHT_BG;
+    const starColor = isDark ? DARK_STAR : LIGHT_STAR;
+
     let width = window.innerWidth;
     let height = window.innerHeight;
     canvas.width = width;
     canvas.height = height;
 
     const stars: { x: number; y: number; z: number }[] = [];
-    const numStars = 500; // amount of stars
-    const speed = 2; // flight speed
+    const numStars = 500;
+    const speed = 2;
 
     for (let i = 0; i < numStars; i++) {
       stars.push({
@@ -31,7 +41,7 @@ export function Starfield() {
     let animationFrameId: number;
 
     const render = () => {
-      ctx.fillStyle = "black";
+      ctx.fillStyle = bgColor;
       ctx.fillRect(0, 0, width, height);
 
       const cx = width / 2;
@@ -53,12 +63,11 @@ export function Starfield() {
         const py = star.y * k + cy;
 
         const size = (1 - star.z / width) * 3;
-
         const opacity = 1 - star.z / width;
 
         if (px >= 0 && px <= width && py >= 0 && py <= height) {
           ctx.beginPath();
-          ctx.fillStyle = `rgba(161, 161, 170, ${opacity})`;
+          ctx.fillStyle = `rgba(${starColor}, ${opacity})`;
           ctx.arc(px, py, size, 0, Math.PI * 2);
           ctx.fill();
         }
@@ -82,7 +91,7 @@ export function Starfield() {
       window.removeEventListener("resize", handleResize);
       cancelAnimationFrame(animationFrameId);
     };
-  }, []);
+  }, [isDark]);
 
   return (
     <canvas

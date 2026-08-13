@@ -25,12 +25,14 @@ export function TetrisText({ text, className }: TetrisTextProps) {
         return (
           <motion.span
             key={i}
-            initial={{ y: -800, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
+            initial={{ y: -600, opacity: 0, rotate: -10 }}
+            animate={{ y: 0, opacity: 1, rotate: 0 }}
             transition={{
-              type: "tween",
-              ease: "linear",
-              duration: 0.4 + Math.random() * 0.3,
+              type: "spring",
+              stiffness: 80,
+              damping: 10,
+              mass: 1.2,
+              delay: i * 0.06,
             }}
             className="inline-block"
           >

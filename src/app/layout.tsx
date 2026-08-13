@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Press_Start_2P } from "next/font/google";
 import "./globals.css";
+import { ThemeSync } from "@/components/ThemeSync";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,11 +33,10 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} ${pixelFont.variable} h-full antialiased dark`}
+      suppressHydrationWarning
     >
-      <body
-        className="min-h-full flex flex-col bg-background text-foreground"
-        suppressHydrationWarning
-      >
+      <body className="min-h-full flex flex-col bg-background text-foreground">
+        <ThemeSync />
         {children}
       </body>
     </html>

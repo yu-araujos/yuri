@@ -42,6 +42,11 @@
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
+
+  --color-brand: #32C7C7;
+  --color-brand-dim: #32C7C780;
+
+  --color-light-surface: #EAF4F7;
 }
 
 /*
@@ -70,9 +75,6 @@
   }
 }
 
-/*
-  ---break---
-*/
 
 @layer base {
   :root {

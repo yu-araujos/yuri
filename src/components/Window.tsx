@@ -52,10 +52,10 @@ export function Window({ id }: WindowProps) {
               : {}),
           }}
           className={cn(
-            "absolute flex flex-col overflow-hidden shadow-2xl ring-1 ring-white/10",
+            "absolute flex flex-col overflow-hidden shadow-2xl ring-1 ring-black/10 dark:ring-white/10 transition-colors duration-500",
             isMaximized
-              ? "inset-y-0 right-0 w-[calc(100%-4rem)] rounded-none border-none bg-zinc-950"
-              : "top-[15%] left-[15%] w-[70%] h-[70%] max-w-4xl rounded-xl bg-zinc-900/95 backdrop-blur-md border border-zinc-700/50",
+              ? "inset-y-0 right-0 w-[calc(100%-4rem)] rounded-none border-none bg-stone-50 dark:bg-zinc-950"
+              : "top-[15%] left-[15%] w-[70%] h-[70%] max-w-4xl rounded-xl bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md border border-stone-200 dark:border-zinc-700/50",
           )}
         >
           {isMaximized && (
@@ -96,7 +96,7 @@ export function Window({ id }: WindowProps) {
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
-                className="flex items-center justify-between px-4 py-3 bg-zinc-950/80 border-b border-zinc-800 cursor-move select-none"
+                className="flex items-center justify-between px-4 py-3 bg-stone-100/80 dark:bg-zinc-950/80 border-b border-stone-200 dark:border-zinc-800 cursor-move select-none transition-colors duration-500"
                 onDoubleClick={() => maximizeApp(id)}
               >
                 <div className="flex items-center space-x-2">
@@ -139,10 +139,10 @@ export function Window({ id }: WindowProps) {
           <motion.div
             layout
             className={cn(
-              "flex-1 overflow-y-auto font-sans text-zinc-300",
+              "flex-1 overflow-y-auto font-sans text-zinc-700 dark:text-zinc-300 transition-colors duration-500",
               isMaximized
-                ? "bg-zinc-950 p-12 md:p-24"
-                : "bg-zinc-900/50 p-6 md:p-10",
+                ? "bg-stone-50 dark:bg-zinc-950 p-12 md:p-24"
+                : "bg-stone-50/80 dark:bg-zinc-900/50 p-6 md:p-10",
             )}
           >
             <motion.div
@@ -152,7 +152,7 @@ export function Window({ id }: WindowProps) {
             >
               <h2
                 className={cn(
-                  "font-mono text-yellow-200 uppercase tracking-wider",
+                  "font-mono text-brand uppercase tracking-wider",
                   isMaximized ? "text-5xl mb-10" : "text-3xl mb-6",
                 )}
               >

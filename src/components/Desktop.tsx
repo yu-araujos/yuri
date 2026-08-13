@@ -13,16 +13,15 @@ export function Desktop() {
   const windowKeys = Object.keys(windows) as Array<keyof typeof windows>;
 
   return (
-    <div className="relative w-full h-screen overflow-hidden bg-zinc-950 text-zinc-300 font-mono">
+    <div className="relative w-full h-screen overflow-hidden bg-light-surface dark:bg-zinc-950 text-zinc-700 dark:text-zinc-300 font-mono transition-colors duration-500">
       <Starfield />
-      <div className="absolute inset-0 bg-black/40 pointer-events-none z-0" />
 
       <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none select-none z-0">
         <TetrisText
           text="YURI SILVA"
-          className="text-5xl md:text-8xl text-yellow-200/80 tracking-widest text-center leading-tight"
+          className="text-5xl md:text-8xl text-brand tracking-widest text-center leading-tight"
         />
-        <p className="mt-4 text-zinc-400 font-mono text-sm tracking-widest uppercase">
+        <p className="mt-4 text-zinc-600 dark:text-zinc-400 font-mono text-sm tracking-widest uppercase">
           Software Engineer
         </p>
       </div>

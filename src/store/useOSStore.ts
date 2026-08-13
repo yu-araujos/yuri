@@ -14,6 +14,7 @@ interface OSState {
   windows: Record<AppId, WindowState>;
   activeWindow: AppId | null;
   highestZIndex: number;
+  isDark: boolean;
 
   openApp: (id: AppId) => void;
   closeApp: (id: AppId) => void;
@@ -21,6 +22,7 @@ interface OSState {
   maximizeApp: (id: AppId) => void;
   focusApp: (id: AppId) => void;
   returnToDesktop: () => void;
+  toggleTheme: () => void;
 }
 
 const defaultWindows: Record<AppId, WindowState> = {
@@ -33,6 +35,7 @@ export const useOSStore = create<OSState>((set) => ({
   windows: defaultWindows,
   activeWindow: null,
   highestZIndex: 1,
+  isDark: true,
 
   openApp: (id) =>
     set((state) => {
@@ -151,4 +154,6 @@ export const useOSStore = create<OSState>((set) => ({
       });
       return { windows: updatedWindows, activeWindow: null };
     }),
+
+  toggleTheme: () => set((state) => ({ isDark: !state.isDark })),
 }));
