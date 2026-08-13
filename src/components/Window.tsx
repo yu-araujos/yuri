@@ -159,7 +159,7 @@ export function Window({ id }: WindowProps) {
             className={cn(
               "flex-1 overflow-y-auto font-sans text-zinc-700 dark:text-zinc-300 transition-colors duration-500",
               id === "contact"
-                ? "bg-zinc-950 text-zinc-100 px-5 pt-6 pb-12 md:p-6"
+                ? "bg-light-surface dark:bg-zinc-950 md:bg-zinc-950 text-zinc-900 dark:text-zinc-100 md:text-zinc-100 px-5 pt-6 pb-12 md:p-6"
                 : isMaximized
                 ? "bg-light-surface dark:bg-zinc-950 p-6 md:p-16"
                 : "bg-light-surface dark:bg-zinc-950 md:bg-stone-50/80 md:dark:bg-zinc-900/50 px-5 pt-6 pb-12 md:p-8",
