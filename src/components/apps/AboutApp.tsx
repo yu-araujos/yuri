@@ -102,27 +102,46 @@ export function AboutApp() {
 
   return (
     <div className="space-y-8 max-w-3xl pb-6">
-      {/* Location & Porto Time Header Bar */}
-      <div className="p-4 rounded-xl bg-stone-100 dark:bg-zinc-900/80 border border-stone-200 dark:border-zinc-800/80 flex items-center justify-between transition-colors">
-        <div className="flex items-center space-x-3">
-          <MapPin className="w-5 h-5 text-brand shrink-0" />
+      {/* Header Badge & Location Bar */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Status / Role Card */}
+        <div className="p-4 rounded-xl bg-stone-100 dark:bg-zinc-900/80 border border-stone-200 dark:border-zinc-800/80 flex items-center space-x-3.5 transition-colors">
+          <div className="relative flex h-3 w-3">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+          </div>
           <div>
             <p className="text-xs font-mono text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
-              Location
+              Current Role
             </p>
             <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-              Porto, Portugal
+              Software Engineer @ DACHSER
             </p>
           </div>
         </div>
 
-        <div className="text-right">
-          <p className="text-xs font-mono text-zinc-500 dark:text-zinc-400 flex items-center justify-end space-x-1 uppercase tracking-wider">
-            <Clock className="w-3 h-3 mr-1" /> WET / WEST
-          </p>
-          <p className="text-sm font-mono font-semibold text-brand tracking-widest">
-            {portoTime || "--:--:--"}
-          </p>
+        {/* Live Porto Time & Location */}
+        <div className="p-4 rounded-xl bg-stone-100 dark:bg-zinc-900/80 border border-stone-200 dark:border-zinc-800/80 flex items-center justify-between transition-colors">
+          <div className="flex items-center space-x-3">
+            <MapPin className="w-5 h-5 text-brand shrink-0" />
+            <div>
+              <p className="text-xs font-mono text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
+                Location
+              </p>
+              <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                Porto, Portugal
+              </p>
+            </div>
+          </div>
+
+          <div className="text-right">
+            <p className="text-xs font-mono text-zinc-500 dark:text-zinc-400 flex items-center justify-end space-x-1 uppercase tracking-wider">
+              <Clock className="w-3 h-3 mr-1" /> WET / WEST
+            </p>
+            <p className="text-sm font-mono font-semibold text-brand tracking-widest">
+              {portoTime || "--:--:--"}
+            </p>
+          </div>
         </div>
       </div>
 
