@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Dock } from "./Dock";
+import { MobileNav } from "./MobileNav";
 import { TetrisText } from "./TetrisText";
 import { Starfield } from "./Starfield";
 import { Window } from './Window';
@@ -38,11 +39,15 @@ export function Desktop() {
         )}
       </AnimatePresence>
 
+      <MobileNav />
+
       {windowKeys.map((id) => (
         <Window key={id} id={id} />
       ))}
 
-      <Dock />
+      <div className="hidden md:block">
+        <Dock />
+      </div>
     </div>
   );
 }

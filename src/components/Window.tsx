@@ -54,12 +54,12 @@ export function Window({ id }: WindowProps) {
               : {}),
           }}
           className={cn(
-            "absolute flex flex-col overflow-hidden shadow-2xl ring-1 ring-black/10 dark:ring-white/10 transition-colors duration-500",
+            "fixed md:absolute flex flex-col overflow-hidden shadow-2xl ring-1 ring-black/10 dark:ring-white/10 transition-colors duration-500",
             isMaximized
               ? "inset-y-0 right-0 w-full md:w-[calc(100%-4rem)] rounded-none border-none bg-stone-50 dark:bg-zinc-950"
               : id === "contact"
-              ? "top-[12%] sm:top-[20%] left-3 right-3 md:left-[30%] mx-auto md:mx-0 w-[calc(100%-1.5rem)] md:w-full max-w-xl h-auto rounded-xl bg-zinc-950 border border-zinc-800 shadow-2xl"
-              : "top-4 sm:top-8 md:top-[12%] bottom-24 sm:bottom-28 md:bottom-auto left-3 right-3 md:left-[12%] md:right-auto w-[calc(100%-1.5rem)] md:w-[76%] md:h-[72%] max-w-5xl rounded-xl bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md border border-stone-200 dark:border-zinc-700/50",
+              ? "top-[15%] md:top-[20%] left-3 right-3 md:left-[30%] mx-auto md:mx-0 w-[calc(100%-1.5rem)] md:w-full max-w-xl h-auto rounded-xl bg-zinc-950 border border-zinc-800 shadow-2xl"
+              : "top-14 md:top-[12%] bottom-0 md:bottom-auto left-0 right-0 md:left-[12%] md:right-auto w-full md:w-[76%] h-[calc(100vh-3.5rem)] md:h-[72%] max-w-5xl rounded-none md:rounded-xl border-none md:border border-stone-200 dark:border-zinc-700/50 bg-stone-50 dark:bg-zinc-950 md:bg-white/95 md:dark:bg-zinc-900/95 backdrop-blur-md",
           )}
         >
           {isMaximized && (
@@ -100,7 +100,7 @@ export function Window({ id }: WindowProps) {
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
-                className="flex items-center justify-between px-4 py-3 bg-stone-100/80 dark:bg-zinc-950/80 border-b border-stone-200 dark:border-zinc-800 cursor-move select-none transition-colors duration-500"
+                className="hidden md:flex items-center justify-between px-4 py-3 bg-stone-100/80 dark:bg-zinc-950/80 border-b border-stone-200 dark:border-zinc-800 cursor-move select-none transition-colors duration-500"
                 onDoubleClick={() => id !== "contact" && maximizeApp(id)}
               >
                 <div className="flex items-center space-x-2">
@@ -153,10 +153,10 @@ export function Window({ id }: WindowProps) {
             className={cn(
               "flex-1 overflow-y-auto font-sans text-zinc-700 dark:text-zinc-300 transition-colors duration-500",
               id === "contact"
-                ? "bg-zinc-950 p-5 md:p-6"
+                ? "bg-zinc-950 p-4 sm:p-5 md:p-6"
                 : isMaximized
-                ? "bg-stone-50 dark:bg-zinc-950 p-12 md:p-24"
-                : "bg-stone-50/80 dark:bg-zinc-900/50 p-6 md:p-10",
+                ? "bg-stone-50 dark:bg-zinc-950 p-6 md:p-24"
+                : "bg-stone-50 dark:bg-zinc-950 md:bg-stone-50/80 md:dark:bg-zinc-900/50 p-4 sm:p-6 md:p-10",
             )}
           >
             <motion.div
@@ -168,7 +168,7 @@ export function Window({ id }: WindowProps) {
                 <h2
                   className={cn(
                     "font-mono text-brand uppercase tracking-wider",
-                    isMaximized ? "text-5xl mb-10" : "text-3xl mb-6",
+                    isMaximized ? "text-3xl md:text-5xl mb-6 md:mb-10" : "text-2xl md:text-3xl mb-4 md:mb-6",
                   )}
                 >
                   {titleMap[id]}
