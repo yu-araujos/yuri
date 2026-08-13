@@ -149,7 +149,7 @@ export function Window({ id }: WindowProps) {
             <motion.div
               initial={false}
               animate={{ y: isMaximized ? 20 : 0, opacity: 1 }}
-              className="max-w-4xl mx-auto"
+              className={cn("mx-auto transition-all duration-300", isMaximized ? "max-w-6xl" : "max-w-4xl")}
             >
               <h2
                 className={cn(

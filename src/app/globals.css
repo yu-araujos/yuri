@@ -49,11 +49,6 @@
   --color-light-surface: #EAF4F7;
 }
 
-/*
-  The default border color has changed to `currentColor` in Tailwind CSS v4,
-  so we've added these base styles back for backcompat.
-  See https://tailwindcss.com/docs/upgrade-guide#default-border-color
-*/
 @layer base {
   *,
   ::after,
