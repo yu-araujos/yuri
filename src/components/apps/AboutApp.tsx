@@ -10,7 +10,6 @@ import {
   CheckCircle2,
   Briefcase,
   GraduationCap,
-  Award,
   Languages,
 } from "lucide-react";
 
@@ -38,29 +37,28 @@ export function AboutApp() {
   const stats = [
     { label: "Years Experience", value: "4+" },
     { label: "Current Company", value: "DACHSER" },
-    { label: "Focus Stack", value: "React & Angular" },
-    { label: "Location", value: "Porto, PT 🇵🇹" },
+    { label: "Focus Stack", value: "Angular & React" },
+    { label: "Location", value: "Porto, PT" },
   ];
 
   const techCategories = [
     {
       title: "Frontend & Frameworks",
       skills: [
-        "React & Next.js",
         "Angular (RxJS, NgRx, Signals)",
+        "React & Next.js",
         "TypeScript & JavaScript",
         "Tailwind CSS & Bootstrap",
         "HTML5 / Modern CSS",
       ],
     },
     {
-      title: "Architecture & Real-Time",
+      title: "Backend & Systems",
       skills: [
-        "WebSocket Integrations",
-        "Data Conflict Resolution",
-        "Heartbeat & Session Persistence",
-        "Complex State Management",
-        "Standalone Architecture",
+        "Node.js & Express",
+        "Java (Academic / OOP)",
+        "RESTful APIs",
+        "PostgreSQL",
       ],
     },
     {
@@ -70,7 +68,6 @@ export function AboutApp() {
         "Git & GitHub",
         "Docker & Jenkins",
         "Agile / SAFe & Scrum",
-        "UI & E2E Testing",
       ],
     },
   ];
@@ -85,9 +82,8 @@ export function AboutApp() {
       location: "Porto, Portugal",
       bullets: [
         "Front-end developer on a new invoicing platform built with Angular, serving international branches in a SAFe team (Portugal & Germany).",
-        "Engineered a voucher locking feature with heartbeat tracking and session persistence to handle browser crashes and dropped connections, eliminating data conflicts.",
-        "Built a user-configurable settings module for the voucher workflow, enabling pop-up invoice PDF viewing and animation toggles for faster repetitive tasks.",
         "Expanded Jest test coverage and pushed the team toward modern Angular patterns, including standalone components.",
+        "Work in a full Scrum cycle (planning, refinement, daily, review, retro) inside a SAFe team with PI Planning every 3 months and Three Amigos sessions.",
       ],
     },
     {
@@ -100,53 +96,33 @@ export function AboutApp() {
       bullets: [
         "Front-end developer on internal asset administration system used daily by fund account managers.",
         "Built a real-time spreadsheet upload module with WebSocket integration for instant processing feedback.",
-        "Participated in the full lifecycle: user stories, estimates, technical documentation, code reviews, and deployments.",
       ],
     },
   ];
 
   return (
     <div className="space-y-8 max-w-3xl pb-6">
-      {/* Header Badge & Location Bar */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Status Card */}
-        <div className="p-4 rounded-xl bg-stone-100 dark:bg-zinc-900/80 border border-stone-200 dark:border-zinc-800/80 flex items-center space-x-3.5 transition-colors">
-          <div className="relative flex h-3 w-3">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
-          </div>
+      {/* Location & Porto Time Header Bar */}
+      <div className="p-4 rounded-xl bg-stone-100 dark:bg-zinc-900/80 border border-stone-200 dark:border-zinc-800/80 flex items-center justify-between transition-colors">
+        <div className="flex items-center space-x-3">
+          <MapPin className="w-5 h-5 text-brand shrink-0" />
           <div>
             <p className="text-xs font-mono text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
-              Current Role
+              Location
             </p>
             <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-              Software Engineer @ DACHSER
+              Porto, Portugal
             </p>
           </div>
         </div>
 
-        {/* Live Porto Time & Location */}
-        <div className="p-4 rounded-xl bg-stone-100 dark:bg-zinc-900/80 border border-stone-200 dark:border-zinc-800/80 flex items-center justify-between transition-colors">
-          <div className="flex items-center space-x-3">
-            <MapPin className="w-5 h-5 text-brand shrink-0" />
-            <div>
-              <p className="text-xs font-mono text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
-                Location
-              </p>
-              <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-                Porto, Portugal 🇵🇹
-              </p>
-            </div>
-          </div>
-
-          <div className="text-right">
-            <p className="text-xs font-mono text-zinc-500 dark:text-zinc-400 flex items-center justify-end space-x-1 uppercase tracking-wider">
-              <Clock className="w-3 h-3 mr-1" /> WET / WEST
-            </p>
-            <p className="text-sm font-mono font-semibold text-brand tracking-widest">
-              {portoTime || "--:--:--"}
-            </p>
-          </div>
+        <div className="text-right">
+          <p className="text-xs font-mono text-zinc-500 dark:text-zinc-400 flex items-center justify-end space-x-1 uppercase tracking-wider">
+            <Clock className="w-3 h-3 mr-1" /> WET / WEST
+          </p>
+          <p className="text-sm font-mono font-semibold text-brand tracking-widest">
+            {portoTime || "--:--:--"}
+          </p>
         </div>
       </div>
 
@@ -161,9 +137,6 @@ export function AboutApp() {
         </p>
         <p className="text-zinc-600 dark:text-zinc-300 leading-relaxed text-sm md:text-base">
           I started out in the Angular ecosystem (<code className="text-brand text-xs font-mono bg-stone-200/60 dark:bg-zinc-800/80 px-1.5 py-0.5 rounded">RxJS</code>, <code className="text-brand text-xs font-mono bg-stone-200/60 dark:bg-zinc-800/80 px-1.5 py-0.5 rounded">NgRx</code>, <code className="text-brand text-xs font-mono bg-stone-200/60 dark:bg-zinc-800/80 px-1.5 py-0.5 rounded">Signals</code>) building internal tools for fund managers at <strong className="text-zinc-900 dark:text-white font-medium">BTG Pactual</strong> and invoicing platforms at <strong className="text-zinc-900 dark:text-white font-medium">DACHSER</strong>. That experience taught me a lot about architectural discipline and testing.
-        </p>
-        <p className="text-zinc-600 dark:text-zinc-300 leading-relaxed text-sm md:text-base">
-          Right now, I am moving my focus over to <strong className="text-zinc-900 dark:text-white font-medium">React and Next.js</strong>. The frameworks change, but the core engineering problems (like building WebSocket integrations that actually give users real-time feedback, or writing logic to prevent two people from editing the same invoice) stay the same. I like taking full ownership of these features, from the initial whiteboard discussions down to the final CSS.
         </p>
       </div>
 
@@ -275,26 +248,22 @@ export function AboutApp() {
           <p className="text-xs font-mono text-zinc-500">Feb 2021 – Feb 2025</p>
         </div>
 
-        {/* Languages & Certification */}
+        {/* Languages */}
         <div className="p-4 rounded-xl bg-stone-100 dark:bg-zinc-900/60 border border-stone-200 dark:border-zinc-800/80 space-y-2">
           <div className="flex items-center space-x-2 text-brand font-mono text-xs font-bold uppercase tracking-wider">
             <Languages className="w-4 h-4" />
-            <span>Languages & Certs</span>
+            <span>Languages</span>
           </div>
-          <ul className="space-y-1 text-xs md:text-sm text-zinc-700 dark:text-zinc-300">
+          <ul className="space-y-1.5 text-xs md:text-sm text-zinc-700 dark:text-zinc-300">
             <li className="flex items-center justify-between">
-              <span>🇵🇹 Portuguese</span>
+              <span>Portuguese</span>
               <span className="font-mono text-xs text-zinc-500">Native</span>
             </li>
             <li className="flex items-center justify-between">
-              <span>🇬🇧 English</span>
-              <span className="font-mono text-xs text-zinc-500">B2 Upper Int. (EF SET)</span>
+              <span>English</span>
+              <span className="font-mono text-xs text-zinc-500">B2 Upper Intermediate</span>
             </li>
           </ul>
-          <div className="pt-1 flex items-center space-x-1.5 text-xs text-zinc-500 font-mono">
-            <Award className="w-3.5 h-3.5 text-brand" />
-            <span>EF SET English Certificate (May 2024)</span>
-          </div>
         </div>
       </div>
     </div>
