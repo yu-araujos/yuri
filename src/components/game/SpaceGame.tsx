@@ -936,7 +936,7 @@ export function SpaceGame() {
         }
 
         // Pickup by player ship!
-        if (Math.hypot(shipX - h.x, shipY - h.y) < 30) {
+        if (Math.hypot(shipX - h.x, shipY - h.y) < 38) {
           heartDrops.splice(i, 1);
           sounds.playHeart();
           spawnPopFx(shipX, shipY, "#EF4444");
@@ -947,13 +947,13 @@ export function SpaceGame() {
         // Render glowing pulsing heart (matching HUD Lucide Heart)
         ctx.save();
         ctx.translate(h.x, h.y);
-        const pulseScale = (1 + Math.sin(h.pulse) * 0.15) * 0.75;
+        const pulseScale = (1 + Math.sin(h.pulse) * 0.15) * 1.35;
         ctx.scale(pulseScale, pulseScale);
         ctx.translate(-12, -12);
 
         ctx.fillStyle = "#EF4444";
         ctx.shadowColor = "#EF4444";
-        ctx.shadowBlur = 12;
+        ctx.shadowBlur = 16;
 
         const heartPath = new Path2D(
           "M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z",
@@ -974,7 +974,7 @@ export function SpaceGame() {
         }
 
         // Pickup by player ship!
-        if (Math.hypot(shipX - s.x, shipY - s.y) < 30) {
+        if (Math.hypot(shipX - s.x, shipY - s.y) < 38) {
           speedDrops.splice(i, 1);
           sounds.playWarp();
           spawnPopFx(shipX, shipY, "#FACC15");
@@ -985,13 +985,13 @@ export function SpaceGame() {
         // Render glowing pulsing Lightning Zap
         ctx.save();
         ctx.translate(s.x, s.y);
-        const pulseScale = (1 + Math.sin(s.pulse) * 0.15) * 0.8;
-        ctx.scale(pulseScale, pulseScale);
+        const speedScale = (1 + Math.sin(s.pulse) * 0.15) * 1.4;
+        ctx.scale(speedScale, speedScale);
         ctx.translate(-12, -12);
 
         ctx.fillStyle = "#FACC15";
         ctx.shadowColor = "#FACC15";
-        ctx.shadowBlur = 14;
+        ctx.shadowBlur = 16;
 
         const zapPath = new Path2D("M13 2 L3 14 H12 L11 22 L21 10 H12 Z");
         ctx.fill(zapPath);
