@@ -19,9 +19,18 @@ const APPS = [
 ];
 
 export function Dock() {
-  const { openApp, windows, returnToDesktop, toggleTheme, isDark } =
-    useOSStore();
+  const {
+    openApp,
+    windows,
+    returnToDesktop,
+    toggleTheme,
+    isDark,
+    isArcadeMode,
+    isWarping,
+  } = useOSStore();
   const mouseX = useMotionValue(Infinity);
+
+  if (isArcadeMode || isWarping) return null;
 
   const isAnyMaximized = Object.values(windows).some(
     (w) => w.isMaximized && w.isOpen && !w.isMinimized,

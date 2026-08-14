@@ -30,6 +30,7 @@ export function Window({ id }: WindowProps) {
     about: "About",
     projects: "Projects",
     contact: "contact.sh",
+    arcade: "Arcade Mode",
   };
 
   return (

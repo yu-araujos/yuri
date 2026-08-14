@@ -1,10 +1,17 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useOSStore } from "@/store/useOSStore";
 
 export function Starfield() {
   const isDark = useOSStore((s) => s.isDark);
+  const isWarping = useOSStore((s) => s.isWarping);
+  const isWarpingRef = useRef(isWarping);
+
+  useEffect(() => {
+    isWarpingRef.current = isWarping;
+  }, [isWarping]);
+
   const hostRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -50,8 +57,8 @@ export function Starfield() {
     let tx = 0;
     let ty = 0;
 
-    const SPEED = 0.005;
-    const FADE = 0.34;
+    const BASE_SPEED = 0.005;
+    const WARP_SPEED = 0.065;
 
     const getColors = () => {
       if (isDark) {
@@ -72,14 +79,20 @@ export function Starfield() {
       };
     };
 
+    let currentSpeed = BASE_SPEED;
+
     const frame = () => {
       const colors = getColors();
+      const targetSpeed = isWarpingRef.current ? WARP_SPEED : BASE_SPEED;
+      currentSpeed += (targetSpeed - currentSpeed) * 0.07;
+
+      const fade = currentSpeed > 0.02 ? 0.15 : 0.34;
 
       cx += (tx - cx) * 0.012;
       cy += (ty - cy) * 0.012;
 
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.fillStyle = `rgba(${colors.bg}, ${FADE})`;
+      ctx.fillStyle = `rgba(${colors.bg}, ${fade})`;
       ctx.fillRect(0, 0, w, h);
 
       const f = Math.min(w, h) * 0.52;
@@ -89,7 +102,7 @@ export function Starfield() {
 
       for (let i = 0; i < N; i++) {
         const z0 = sz[i];
-        const z1 = z0 - SPEED * (0.35 + (1 - z0));
+        const z1 = z0 - currentSpeed * (0.35 + (1 - z0));
         if (z1 < 0.06) {
           spawn(i, false);
           continue;

@@ -1,6 +1,7 @@
 import { create } from 'zustand';
+import { sounds } from '@/utils/audio';
 
-export type AppId = 'about' | 'projects' | 'contact';
+export type AppId = 'about' | 'projects' | 'contact' | 'arcade';
 
 export interface WindowState {
   id: AppId;
@@ -16,6 +17,9 @@ interface OSState {
   highestZIndex: number;
   isDark: boolean;
 
+  isArcadeMode: boolean;
+  isWarping: boolean;
+
   openApp: (id: AppId) => void;
   closeApp: (id: AppId) => void;
   minimizeApp: (id: AppId) => void;
@@ -23,22 +27,51 @@ interface OSState {
   focusApp: (id: AppId) => void;
   returnToDesktop: () => void;
   toggleTheme: () => void;
+
+  startArcadeMode: () => void;
+  exitArcadeMode: () => void;
 }
 
 const defaultWindows: Record<AppId, WindowState> = {
   about: { id: 'about', isOpen: false, isMinimized: false, isMaximized: false, zIndex: 1 },
   projects: { id: 'projects', isOpen: false, isMinimized: false, isMaximized: false, zIndex: 0 },
   contact: { id: 'contact', isOpen: false, isMinimized: false, isMaximized: false, zIndex: 0 },
+  arcade: { id: 'arcade', isOpen: false, isMinimized: false, isMaximized: false, zIndex: 0 },
 };
 
-export const useOSStore = create<OSState>((set) => ({
+export const useOSStore = create<OSState>((set, get) => ({
   windows: defaultWindows,
   activeWindow: null,
   highestZIndex: 1,
   isDark: true,
 
+  isArcadeMode: false,
+  isWarping: false,
+
+  startArcadeMode: () => {
+    if (get().isArcadeMode || get().isWarping) return;
+
+    sounds.playWarp();
+    get().returnToDesktop();
+
+    set({ isWarping: true });
+
+    setTimeout(() => {
+      set({ isWarping: false, isArcadeMode: true });
+    }, 500);
+  },
+
+  exitArcadeMode: () => {
+    set({ isArcadeMode: false, isWarping: false });
+  },
+
   openApp: (id) =>
     set((state) => {
+      if (id === "arcade") {
+        get().startArcadeMode();
+        return state;
+      }
+
       const newZIndex = state.highestZIndex + 1;
 
       if (id === "contact") {

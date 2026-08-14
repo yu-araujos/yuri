@@ -8,16 +8,33 @@ import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
   { id: "about" as AppId, label: "About", icon: User, disabled: false },
-  { id: "projects" as AppId, label: "Projects", tag: "Soon", icon: FolderGit2, disabled: true },
+  {
+    id: "projects" as AppId,
+    label: "Projects",
+    tag: "Soon",
+    icon: FolderGit2,
+    disabled: true,
+  },
   { id: "contact" as AppId, label: "Contact", icon: AtSign, disabled: false },
 ];
 
 export function MobileNav() {
   const [isOpen, setIsOpen] = useState(false);
-  const { openApp, closeApp, windows, returnToDesktop, toggleTheme, isDark } = useOSStore();
+  const {
+    openApp,
+    closeApp,
+    windows,
+    returnToDesktop,
+    toggleTheme,
+    isDark,
+    isArcadeMode,
+    isWarping,
+  } = useOSStore();
+
+  if (isArcadeMode || isWarping) return null;
 
   const activeAppId = Object.values(windows).find(
-    (w) => w.isOpen && !w.isMinimized
+    (w) => w.isOpen && !w.isMinimized,
   )?.id;
 
   const handleSelect = (id: AppId, disabled?: boolean) => {
@@ -49,7 +66,11 @@ export function MobileNav() {
             className="p-2 rounded-xl bg-stone-200/80 dark:bg-zinc-900 border border-stone-300 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 transition-colors"
             aria-label="Toggle theme"
           >
-            {isDark ? <Sun className="w-4 h-4 text-brand" /> : <Moon className="w-4 h-4 text-brand" />}
+            {isDark ? (
+              <Sun className="w-4 h-4 text-brand" />
+            ) : (
+              <Moon className="w-4 h-4 text-brand" />
+            )}
           </button>
 
           <button
@@ -57,7 +78,11 @@ export function MobileNav() {
             className="p-2 rounded-xl bg-stone-200/80 dark:bg-zinc-900 border border-stone-300 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 transition-colors"
             aria-label="Open menu"
           >
-            {isOpen ? <X className="w-5 h-5 text-brand" /> : <Menu className="w-5 h-5 text-brand" />}
+            {isOpen ? (
+              <X className="w-5 h-5 text-brand" />
+            ) : (
+              <Menu className="w-5 h-5 text-brand" />
+            )}
           </button>
         </div>
       </header>
@@ -91,12 +116,17 @@ export function MobileNav() {
                         isActive
                           ? "bg-brand/15 border-brand/40 text-brand font-bold"
                           : item.disabled
-                          ? "bg-stone-100/50 dark:bg-zinc-900/30 border-stone-200/50 dark:border-zinc-800/40 text-zinc-400 dark:text-zinc-600 opacity-60 cursor-not-allowed"
-                          : "bg-stone-100/80 dark:bg-zinc-900/80 border-stone-200 dark:border-zinc-800/80 text-zinc-900 dark:text-zinc-100 hover:border-brand/40"
+                            ? "bg-stone-100/50 dark:bg-zinc-900/30 border-stone-200/50 dark:border-zinc-800/40 text-zinc-400 dark:text-zinc-600 opacity-60 cursor-not-allowed"
+                            : "bg-stone-100/80 dark:bg-zinc-900/80 border-stone-200 dark:border-zinc-800/80 text-zinc-900 dark:text-zinc-100 hover:border-brand/40",
                       )}
                     >
                       <div className="flex items-center space-x-3">
-                        <Icon className={cn("w-5 h-5", isActive ? "text-brand" : "text-zinc-500")} />
+                        <Icon
+                          className={cn(
+                            "w-5 h-5",
+                            isActive ? "text-brand" : "text-zinc-500",
+                          )}
+                        />
                         <span>{item.label}</span>
                       </div>
 
@@ -116,7 +146,9 @@ export function MobileNav() {
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                 <span>Porto, Portugal</span>
               </div>
-              <p className="text-[11px] text-zinc-400">Available for new opportunities</p>
+              <p className="text-[11px] text-zinc-400">
+                Available for new opportunities
+              </p>
             </div>
           </motion.div>
         )}
