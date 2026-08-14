@@ -36,6 +36,10 @@ interface Alien {
   alive: boolean;
   appearDelay: number;
   hasPopped?: boolean;
+  state?: "formation" | "diving" | "returning";
+  angle?: number;
+  diveSpeed?: number;
+  diveSwoopDir?: number;
 }
 
 export function SpaceGame() {
@@ -47,6 +51,7 @@ export function SpaceGame() {
   const [wave, setWave] = useState(1);
   const [lives, setLives] = useState(3);
   const [gameOver, setGameOver] = useState(false);
+  const gameOverRef = useRef(false);
   const [hitFlash, setHitFlash] = useState(false);
   const [restartCount, setRestartCount] = useState(0);
 
@@ -57,7 +62,14 @@ export function SpaceGame() {
     }
   }, []);
 
+  const triggerGameOver = () => {
+    gameOverRef.current = true;
+    setGameOver(true);
+    sounds.playGameOver();
+  };
+
   const restartGame = () => {
+    gameOverRef.current = false;
     setScore(0);
     setWave(1);
     setLives(3);
@@ -71,6 +83,11 @@ export function SpaceGame() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    const origOverflow = document.body.style.overflow;
+    const origTouchAction = document.body.style.touchAction;
+    document.body.style.overflow = "hidden";
+    document.body.style.touchAction = "none";
+
     let animId = 0;
     let width = (canvas.width = window.innerWidth);
     let height = (canvas.height = window.innerHeight);
@@ -83,7 +100,7 @@ export function SpaceGame() {
     window.addEventListener("resize", handleResize);
 
     let shipX = width / 2;
-    const shipY = height - 80;
+    let shipY = height - 80;
     const shipWidth = 40;
     let shipSpeed = 8;
     let invincibilityTimer = 0;
@@ -121,6 +138,7 @@ export function SpaceGame() {
 
     const handleMouseMove = (e: MouseEvent) => {
       shipX = e.clientX;
+      shipY = e.clientY;
     };
 
     const handleMouseDown = (e: MouseEvent) => {
@@ -135,12 +153,17 @@ export function SpaceGame() {
     };
 
     const handleTouchMove = (e: TouchEvent) => {
+      if (e.cancelable) e.preventDefault();
       if (e.touches[0]) {
         shipX = e.touches[0].clientX;
+        shipY = e.touches[0].clientY;
       }
     };
 
     const handleTouchStart = (e: TouchEvent) => {
+      if (e.cancelable && (e.target as HTMLElement).tagName !== "BUTTON") {
+        e.preventDefault();
+      }
       if ((e.target as HTMLElement).tagName !== "BUTTON") {
         isMouseDown = true;
         fireBullet();
@@ -156,9 +179,11 @@ export function SpaceGame() {
     window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("mousedown", handleMouseDown);
     window.addEventListener("mouseup", handleMouseUp);
-    window.addEventListener("touchmove", handleTouchMove);
-    window.addEventListener("touchstart", handleTouchStart);
-    window.addEventListener("touchend", handleTouchEnd);
+    window.addEventListener("touchmove", handleTouchMove, { passive: false });
+    window.addEventListener("touchstart", handleTouchStart, {
+      passive: false,
+    });
+    window.addEventListener("touchend", handleTouchEnd, { passive: false });
 
     let bullets: Bullet[] = [];
     let enemyBullets: Bullet[] = [];
@@ -174,23 +199,31 @@ export function SpaceGame() {
     const spawnWave = (wNum: number) => {
       aliens = [];
       waveStartTime = Date.now();
-      const cols = Math.min(10, Math.floor((width - 80) / 52));
       let idx = 0;
+      const isMobile = width < 640;
+      const spacingX = isMobile ? Math.min(42, (width - 32) / 6) : 52;
+      const maxCols = isMobile ? 6 : 10;
+      const cols = Math.min(maxCols, Math.floor((width - 32) / spacingX));
+      const alienW = isMobile ? 26 : 34;
+      const alienH = isMobile ? 18 : 24;
+      const rowGap = isMobile ? 30 : 42;
+      const startY = isMobile ? 65 : 85;
+
+      const startX = (width - cols * spacingX) / 2;
 
       if (wNum % 3 === 1) {
-        const startX = (width - cols * 52) / 2;
         for (let r = 0; r < 3; r++) {
           for (let c = 0; c < cols; c++) {
             const type = r;
             const color =
               type === 0 ? "#32C7C7" : type === 1 ? "#F59E0B" : "#EC4899";
             aliens.push({
-              x: startX + c * 52,
-              y: 90 + r * 45,
-              baseX: startX + c * 52,
-              baseY: 90 + r * 45,
-              width: 34,
-              height: 24,
+              x: startX + c * spacingX,
+              y: startY + r * rowGap,
+              baseX: startX + c * spacingX,
+              baseY: startY + r * rowGap,
+              width: alienW,
+              height: alienH,
               type,
               color,
               points: (3 - r) * 100,
@@ -203,18 +236,17 @@ export function SpaceGame() {
         }
       } else if (wNum % 3 === 2) {
         const mid = Math.floor(cols / 2);
-        const startX = (width - cols * 52) / 2;
         for (let c = 0; c < cols; c++) {
           const rowOffset = Math.abs(c - mid);
           for (let r = 0; r < 2; r++) {
-            const yPos = 80 + (rowOffset + r * 1.5) * 35;
+            const yPos = startY + (rowOffset + r * 1.5) * (rowGap * 0.85);
             aliens.push({
-              x: startX + c * 52,
+              x: startX + c * spacingX,
               y: yPos,
-              baseX: startX + c * 52,
+              baseX: startX + c * spacingX,
               baseY: yPos,
-              width: 34,
-              height: 24,
+              width: alienW,
+              height: alienH,
               type: c % 3,
               color: c % 2 === 0 ? "#32C7C7" : "#F59E0B",
               points: 150,
@@ -226,17 +258,16 @@ export function SpaceGame() {
           }
         }
       } else {
-        const startX = (width - cols * 52) / 2;
         for (let r = 0; r < 4; r++) {
           for (let c = 0; c < cols; c++) {
             const isAlt = (r + c) % 2 === 0;
             aliens.push({
-              x: startX + c * 52,
-              y: 80 + r * 40,
-              baseX: startX + c * 52,
-              baseY: 80 + r * 40,
-              width: 34,
-              height: 24,
+              x: startX + c * spacingX,
+              y: startY + r * (rowGap * 0.9),
+              baseX: startX + c * spacingX,
+              baseY: startY + r * (rowGap * 0.9),
+              width: alienW,
+              height: alienH,
               type: r % 3,
               color: isAlt ? "#EC4899" : "#32C7C7",
               points: 200,
@@ -290,6 +321,7 @@ export function SpaceGame() {
     let frameCount = 0;
 
     const loop = () => {
+      if (gameOverRef.current) return;
       frameCount++;
       waveTime += 0.03;
       if (invincibilityTimer > 0) invincibilityTimer--;
@@ -306,7 +338,14 @@ export function SpaceGame() {
       if (keys["ArrowRight"] || keys["KeyD"]) {
         shipX += shipSpeed;
       }
+      if (keys["ArrowUp"] || keys["KeyW"]) {
+        shipY -= shipSpeed;
+      }
+      if (keys["ArrowDown"] || keys["KeyS"]) {
+        shipY += shipSpeed;
+      }
       shipX = Math.max(shipWidth / 2, Math.min(width - shipWidth / 2, shipX));
+      shipY = Math.max(100, Math.min(height - 40, shipY));
 
       if (invincibilityTimer === 0 || Math.floor(frameCount / 4) % 2 === 0) {
         ctx.fillStyle = "#32C7C7";
@@ -381,8 +420,7 @@ export function SpaceGame() {
           setLives((l) => {
             const nextLives = l - 1;
             if (nextLives <= 0) {
-              setGameOver(true);
-              sounds.playGameOver();
+              triggerGameOver();
             }
             return nextLives;
           });
@@ -396,6 +434,29 @@ export function SpaceGame() {
 
       let edgeHit = false;
       let aliveCount = 0;
+
+      // Periodically trigger Galaga-style swooping diving attacks!
+      const diveInterval = Math.max(70, 160 - currentWave * 15);
+      if (frameCount % diveInterval === 0 && activeAliens.length > 0) {
+        const formationAliens = activeAliens.filter(
+          (a) => !a.state || a.state === "formation",
+        );
+        if (formationAliens.length > 0) {
+          const countToDive = Math.min(
+            formationAliens.length,
+            Math.random() < 0.35 ? 2 : 1,
+          );
+          for (let d = 0; d < countToDive; d++) {
+            const idx = Math.floor(Math.random() * formationAliens.length);
+            const diver = formationAliens[idx];
+            diver.state = "diving";
+            diver.angle = Math.PI / 2;
+            diver.diveSpeed = 3.5 + currentWave * 0.4 + Math.random() * 0.8;
+            diver.diveSwoopDir = (Math.random() - 0.5) * 0.04;
+            formationAliens.splice(idx, 1);
+          }
+        }
+      }
 
       for (let i = 0; i < aliens.length; i++) {
         const a = aliens[i];
@@ -413,30 +474,96 @@ export function SpaceGame() {
 
         aliveCount++;
 
-        a.baseX += alienDirection * (alienSpeed + currentWave * 0.25);
-        a.x = a.baseX;
+        // --- Alien Movement State Machine ---
+        if (!a.state || a.state === "formation") {
+          a.baseX += alienDirection * (alienSpeed + currentWave * 0.25);
+          a.x = a.baseX;
+          a.y = a.baseY + Math.sin(waveTime * 1.5 + a.baseX * 0.03) * 12;
 
-        if (currentWave % 2 === 0) {
-          a.y = a.baseY + Math.sin(waveTime + a.baseX * 0.02) * 15;
-        }
+          if (a.x < 20 || a.x + a.width > width - 20) {
+            edgeHit = true;
+          }
+        } else if (a.state === "diving") {
+          // Swooping curve towards player ship
+          const targetAngle = Math.atan2(
+            shipY - (a.y + a.height / 2),
+            shipX - (a.x + a.width / 2),
+          );
+          let diff = targetAngle - (a.angle || Math.PI / 2);
+          while (diff < -Math.PI) diff += Math.PI * 2;
+          while (diff > Math.PI) diff -= Math.PI * 2;
+          a.angle =
+            (a.angle || Math.PI / 2) + diff * 0.035 + (a.diveSwoopDir || 0);
 
-        if (a.x < 20 || a.x + a.width > width - 20) {
-          edgeHit = true;
+          a.x += Math.cos(a.angle) * (a.diveSpeed || 3.5);
+          a.y += Math.sin(a.angle) * (a.diveSpeed || 3.5);
+
+          // Shoot while diving
+          if (Math.random() < 0.025) {
+            enemyBullets.push({
+              x: a.x + a.width / 2,
+              y: a.y + a.height,
+              vy: 5 + currentWave * 0.4,
+            });
+          }
+
+          // Direct collision with player ship
+          if (
+            invincibilityTimer === 0 &&
+            Math.abs(a.x + a.width / 2 - shipX) < 26 &&
+            Math.abs(a.y + a.height / 2 - shipY) < 26
+          ) {
+            a.alive = false;
+            spawnExplosion(a.x + a.width / 2, a.y + a.height / 2, a.color);
+            spawnExplosion(shipX, shipY, "#EF4444");
+            invincibilityTimer = 65;
+            setHitFlash(true);
+            setTimeout(() => setHitFlash(false), 200);
+            setLives((l) => {
+              const nextLives = l - 1;
+              if (nextLives <= 0) {
+                triggerGameOver();
+              }
+              return nextLives;
+            });
+          }
+
+          // Reached bottom -> loop around to top and return
+          if (a.y > height + 40) {
+            a.y = -40;
+            a.state = "returning";
+          }
+        } else if (a.state === "returning") {
+          const targetX = a.baseX;
+          const targetY =
+            a.baseY + Math.sin(waveTime * 1.5 + a.baseX * 0.03) * 12;
+          const dx = targetX - a.x;
+          const dy = targetY - a.y;
+          const dist = Math.hypot(dx, dy);
+          if (dist < 10) {
+            a.x = targetX;
+            a.y = targetY;
+            a.state = "formation";
+          } else {
+            a.x += (dx / dist) * 5;
+            a.y += (dy / dist) * 5;
+          }
         }
 
         ctx.fillStyle = a.color;
         const animFrame = Math.floor(frameCount / 20) % 2;
+        const scale = a.width / 34;
 
-        ctx.fillRect(a.x + 8, a.y, 18, 4);
-        ctx.fillRect(a.x + 4, a.y + 4, 26, 8);
-        ctx.fillRect(a.x, a.y + 12, 34, 6);
+        ctx.fillRect(a.x + 8 * scale, a.y, 18 * scale, 4 * scale);
+        ctx.fillRect(a.x + 4 * scale, a.y + 4 * scale, 26 * scale, 8 * scale);
+        ctx.fillRect(a.x, a.y + 12 * scale, a.width, 6 * scale);
 
         if (animFrame === 0) {
-          ctx.fillRect(a.x + 4, a.y + 18, 6, 6);
-          ctx.fillRect(a.x + 24, a.y + 18, 6, 6);
+          ctx.fillRect(a.x + 4 * scale, a.y + 18 * scale, 6 * scale, 6 * scale);
+          ctx.fillRect(a.x + 24 * scale, a.y + 18 * scale, 6 * scale, 6 * scale);
         } else {
-          ctx.fillRect(a.x, a.y + 18, 6, 6);
-          ctx.fillRect(a.x + 28, a.y + 18, 6, 6);
+          ctx.fillRect(a.x, a.y + 18 * scale, 6 * scale, 6 * scale);
+          ctx.fillRect(a.x + 28 * scale, a.y + 18 * scale, 6 * scale, 6 * scale);
         }
 
         for (let j = bullets.length - 1; j >= 0; j--) {
@@ -466,9 +593,11 @@ export function SpaceGame() {
           }
         }
 
-        if (a.y + a.height >= shipY - 10) {
-          setGameOver(true);
-          sounds.playGameOver();
+        if (
+          (!a.state || a.state === "formation") &&
+          a.y + a.height >= shipY - 10
+        ) {
+          triggerGameOver();
         }
       }
 
@@ -509,6 +638,8 @@ export function SpaceGame() {
     animId = requestAnimationFrame(loop);
 
     return () => {
+      document.body.style.overflow = origOverflow;
+      document.body.style.touchAction = origTouchAction;
       cancelAnimationFrame(animId);
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("keydown", handleKeyDown);
@@ -524,59 +655,66 @@ export function SpaceGame() {
 
   return (
     <div
-      className={`fixed inset-0 z-40 overflow-hidden bg-transparent font-mono select-none transition-colors duration-200 ${hitFlash ? "bg-red-500/20" : ""}`}
+      className={`fixed inset-0 z-40 overflow-hidden bg-transparent font-mono select-none touch-none overscroll-none transition-colors duration-200 ${hitFlash ? "bg-red-500/20" : ""}`}
     >
       <canvas
         ref={canvasRef}
-        className="absolute inset-0 block w-full h-full cursor-crosshair"
+        className="absolute inset-0 block w-full h-full cursor-crosshair touch-none"
       />
 
       {/* Top HUD */}
-      <div className="absolute top-4 left-4 right-4 flex items-center justify-between pointer-events-none z-10">
-        <div className="flex items-center space-x-3 sm:space-x-4">
-          <div className="bg-white/80 dark:bg-zinc-900/85 border border-stone-200/80 dark:border-zinc-800 px-3 py-1.5 rounded-xl backdrop-blur-md shadow-sm">
-            <span className="text-xs text-zinc-500 dark:text-zinc-400 uppercase tracking-widest mr-2">
+      <div className="absolute top-2.5 sm:top-4 left-2.5 sm:left-4 right-2.5 sm:right-4 flex items-center justify-between pointer-events-none z-10">
+        <div className="flex items-center space-x-1.5 sm:space-x-4">
+          <div className="bg-white/80 dark:bg-zinc-900/85 border border-stone-200/80 dark:border-zinc-800 px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl backdrop-blur-md shadow-sm">
+            <span className="text-[10px] sm:text-xs text-zinc-500 dark:text-zinc-400 uppercase tracking-widest mr-1 sm:mr-2">
               Score
             </span>
-            <span className="text-base font-bold text-brand">{score}</span>
+            <span className="text-xs sm:text-base font-bold text-brand">
+              {score}
+            </span>
           </div>
 
-          <div className="bg-white/80 dark:bg-zinc-900/85 border border-stone-200/80 dark:border-zinc-800 px-3 py-1.5 rounded-xl backdrop-blur-md shadow-sm flex items-center space-x-2">
-            <Trophy className="w-4 h-4 text-amber-500 dark:text-amber-400" />
-            <span className="text-xs text-zinc-500 dark:text-zinc-400 uppercase tracking-widest hidden sm:inline">
+          <div className="bg-white/80 dark:bg-zinc-900/85 border border-stone-200/80 dark:border-zinc-800 px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl backdrop-blur-md shadow-sm flex items-center space-x-1 sm:space-x-2">
+            <Trophy className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500 dark:text-amber-400" />
+            <span className="text-[10px] sm:text-xs text-zinc-500 dark:text-zinc-400 uppercase tracking-widest hidden sm:inline">
               High
             </span>
-            <span className="text-base font-bold text-amber-500 dark:text-amber-400">
+            <span className="text-xs sm:text-base font-bold text-amber-500 dark:text-amber-400">
               {highScore}
             </span>
           </div>
 
-          <div className="bg-white/80 dark:bg-zinc-900/85 border border-stone-200/80 dark:border-zinc-800 px-3 py-1.5 rounded-xl backdrop-blur-md shadow-sm hidden sm:block">
-            <span className="text-xs text-zinc-500 dark:text-zinc-400 uppercase tracking-widest mr-2">
+          <div className="bg-white/80 dark:bg-zinc-900/85 border border-stone-200/80 dark:border-zinc-800 px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl backdrop-blur-md shadow-sm hidden md:block">
+            <span className="text-[10px] sm:text-xs text-zinc-500 dark:text-zinc-400 uppercase tracking-widest mr-1 sm:mr-2">
               Wave
             </span>
-            <span className="text-base font-bold text-emerald-500 dark:text-emerald-400">
+            <span className="text-xs sm:text-base font-bold text-emerald-500 dark:text-emerald-400">
               {wave}
             </span>
           </div>
 
-          <div className="bg-white/80 dark:bg-zinc-900/85 border border-stone-200/80 dark:border-zinc-800 px-3 py-1.5 rounded-xl backdrop-blur-md shadow-sm flex items-center space-x-1">
+          <div className="bg-white/80 dark:bg-zinc-900/85 border border-stone-200/80 dark:border-zinc-800 px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl backdrop-blur-md shadow-sm flex items-center space-x-1">
             {[...Array(3)].map((_, i) => (
               <Heart
                 key={i}
-                className={`w-4 h-4 ${i < lives ? "text-red-500 fill-red-500" : "text-zinc-300 dark:text-zinc-700"}`}
+                className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${
+                  i < lives
+                    ? "text-red-500 fill-red-500"
+                    : "text-zinc-300 dark:text-zinc-700"
+                }`}
               />
             ))}
           </div>
         </div>
 
-        <div className="flex items-center space-x-3 pointer-events-auto">
+        <div className="flex items-center space-x-2 pointer-events-auto">
           <button
             onClick={exitArcadeMode}
-            className="flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-red-500/10 dark:bg-red-500/20 border border-red-500/30 dark:border-red-500/40 text-red-600 dark:text-red-400 hover:bg-red-500/20 transition-colors text-xs font-mono font-bold cursor-pointer"
+            className="flex items-center space-x-1 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-red-500/10 dark:bg-red-500/20 border border-red-500/30 dark:border-red-500/40 text-red-600 dark:text-red-400 hover:bg-red-500/20 transition-colors text-[11px] sm:text-xs font-mono font-bold cursor-pointer whitespace-nowrap shrink-0"
           >
-            <span>Exit Arcade</span>
-            <X className="w-4 h-4" />
+            <span className="hidden sm:inline">Exit Arcade</span>
+            <span className="inline sm:hidden">Exit</span>
+            <X className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </button>
         </div>
       </div>
@@ -584,7 +722,7 @@ export function SpaceGame() {
       {/* Bottom Controls Help */}
       <div className="absolute bottom-4 left-0 right-0 text-center pointer-events-none z-10">
         <p className="text-[11px] text-zinc-600 dark:text-zinc-400 font-mono bg-white/80 dark:bg-zinc-900/85 inline-block px-3 py-1 rounded-full border border-stone-200/80 dark:border-zinc-800 backdrop-blur-md shadow-sm">
-          Hold / Click Space to Shoot • Move Mouse / Touch to Aim
+          Hold / Click Space to Shoot • Move WASD / Arrows / Mouse / Touch
         </p>
       </div>
 
