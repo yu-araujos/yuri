@@ -61,6 +61,13 @@ interface HeartDrop {
   pulse: number;
 }
 
+interface SpeedDrop {
+  x: number;
+  y: number;
+  vy: number;
+  pulse: number;
+}
+
 export function SpaceGame() {
   const { exitArcadeMode, isDark } = useOSStore();
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -130,7 +137,8 @@ export function SpaceGame() {
 
     const fireBullet = () => {
       const now = Date.now();
-      if (now - lastFireTime < 550) return;
+      const fireCooldown = speedBoostTimer > 0 ? 150 : 550;
+      if (now - lastFireTime < fireCooldown) return;
       lastFireTime = now;
 
       bullets.push({
@@ -212,6 +220,8 @@ export function SpaceGame() {
     let particles: Particle[] = [];
     let meteors: Meteor[] = [];
     let heartDrops: HeartDrop[] = [];
+    let speedDrops: SpeedDrop[] = [];
+    let speedBoostTimer = 0;
 
     let currentWave = 1;
     let aliens: Alien[] = [];
@@ -225,6 +235,7 @@ export function SpaceGame() {
       aliens = [];
       meteors = [];
       heartDrops = [];
+      speedDrops = [];
       waveStartTime = Date.now();
       let idx = 0;
       const isMobile = width < 640;
@@ -352,6 +363,7 @@ export function SpaceGame() {
       frameCount++;
       waveTime += 0.03;
       if (invincibilityTimer > 0) invincibilityTimer--;
+      if (speedBoostTimer > 0) speedBoostTimer--;
 
       ctx.clearRect(0, 0, width, height);
 
@@ -359,20 +371,29 @@ export function SpaceGame() {
         fireBullet();
       }
 
+      const curSpeed = speedBoostTimer > 0 ? 12 : shipSpeed;
       if (keys["ArrowLeft"] || keys["KeyA"]) {
-        shipX -= shipSpeed;
+        shipX -= curSpeed;
       }
       if (keys["ArrowRight"] || keys["KeyD"]) {
-        shipX += shipSpeed;
+        shipX += curSpeed;
       }
       if (keys["ArrowUp"] || keys["KeyW"]) {
-        shipY -= shipSpeed;
+        shipY -= curSpeed;
       }
       if (keys["ArrowDown"] || keys["KeyS"]) {
-        shipY += shipSpeed;
+        shipY += curSpeed;
       }
       shipX = Math.max(shipWidth / 2, Math.min(width - shipWidth / 2, shipX));
       shipY = Math.max(100, Math.min(height - 40, shipY));
+
+      if (speedBoostTimer > 0) {
+        ctx.fillStyle = "#FACC15";
+        ctx.shadowColor = "#FACC15";
+        ctx.shadowBlur = 15;
+        ctx.fillRect(shipX - 14, shipY + 10, 28, 4);
+        ctx.shadowBlur = 0;
+      }
 
       if (invincibilityTimer === 0 || Math.floor(frameCount / 4) % 2 === 0) {
         ctx.fillStyle = "#32C7C7";
@@ -511,7 +532,11 @@ export function SpaceGame() {
 
         // --- Alien Movement State Machine ---
         if (!a.state || a.state === "formation") {
-          a.baseX += alienDirection * (alienSpeed + (currentWave - 1) * 0.35);
+          const isMobile = width < 640;
+          const currentAlienSpeed = isMobile
+            ? 0.9 + (currentWave - 1) * 0.2
+            : alienSpeed + (currentWave - 1) * 0.35;
+          a.baseX += alienDirection * currentAlienSpeed;
           a.x = a.baseX;
           a.y = a.baseY + Math.sin(waveTime * 2.0 + a.type * 0.8) * 8;
 
@@ -621,6 +646,15 @@ export function SpaceGame() {
               });
             }
 
+            if (Math.random() < 0.12) {
+              speedDrops.push({
+                x: a.x + a.width / 2,
+                y: a.y + a.height / 2,
+                vy: 1.6,
+                pulse: 0,
+              });
+            }
+
             setScore((s) => {
               const newScore = s + a.points;
               setHighScore((h) => {
@@ -657,7 +691,12 @@ export function SpaceGame() {
       if (edgeHit && edgeHitCooldown === 0) {
         edgeHitCooldown = 25;
         alienDirection *= -1;
-        const dropAmount = 14 + Math.min(12, currentWave * 2);
+        const isMobile = width < 640;
+        const baseDrop = isMobile ? 6 : 10;
+        const waveExtra = isMobile
+          ? Math.min(4, (currentWave - 1) * 0.6)
+          : Math.min(8, (currentWave - 1) * 1.2);
+        const dropAmount = Math.round(baseDrop + waveExtra);
         for (let i = 0; i < aliens.length; i++) {
           aliens[i].baseY += dropAmount;
           aliens[i].y += dropAmount;
@@ -711,6 +750,15 @@ export function SpaceGame() {
               // 25% chance to drop a heart!
               if (Math.random() < 0.25) {
                 heartDrops.push({
+                  x: m.x,
+                  y: m.y,
+                  vy: 1.6,
+                  pulse: 0,
+                });
+              }
+
+              if (Math.random() < 0.25) {
+                speedDrops.push({
                   x: m.x,
                   y: m.y,
                   vy: 1.6,
@@ -919,6 +967,42 @@ export function SpaceGame() {
         ctx.restore();
       }
 
+      // --- Update & Render Speed Power-up Drops ---
+      for (let i = speedDrops.length - 1; i >= 0; i--) {
+        const s = speedDrops[i];
+        s.y += s.vy;
+        s.pulse += 0.09;
+
+        if (s.y > height + 30) {
+          speedDrops.splice(i, 1);
+          continue;
+        }
+
+        // Pickup by player ship!
+        if (Math.hypot(shipX - s.x, shipY - s.y) < 30) {
+          speedDrops.splice(i, 1);
+          sounds.playWarp();
+          spawnPopFx(shipX, shipY, "#FACC15");
+          speedBoostTimer = 480;
+          continue;
+        }
+
+        // Render glowing pulsing Lightning Zap
+        ctx.save();
+        ctx.translate(s.x, s.y);
+        const pulseScale = (1 + Math.sin(s.pulse) * 0.15) * 0.8;
+        ctx.scale(pulseScale, pulseScale);
+        ctx.translate(-12, -12);
+
+        ctx.fillStyle = "#FACC15";
+        ctx.shadowColor = "#FACC15";
+        ctx.shadowBlur = 14;
+
+        const zapPath = new Path2D("M13 2 L3 14 H12 L11 22 L21 10 H12 Z");
+        ctx.fill(zapPath);
+        ctx.restore();
+      }
+
       for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i];
         p.x += p.vx;
@@ -988,7 +1072,7 @@ export function SpaceGame() {
             </span>
           </div>
 
-          <div className="bg-white/80 dark:bg-zinc-900/85 border border-stone-200/80 dark:border-zinc-800 px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl backdrop-blur-md shadow-sm hidden md:block">
+          <div className="bg-white/80 dark:bg-zinc-900/85 border border-stone-200/80 dark:border-zinc-800 px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl backdrop-blur-md shadow-sm">
             <span className="text-[10px] sm:text-xs text-zinc-500 dark:text-zinc-400 uppercase tracking-widest mr-1 sm:mr-2">
               Wave
             </span>
