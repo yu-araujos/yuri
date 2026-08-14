@@ -670,12 +670,7 @@ export function SpaceGame() {
           }
         }
 
-        if (
-          (!a.state || a.state === "formation") &&
-          a.y + a.height >= shipY - 10
-        ) {
-          triggerGameOver();
-        }
+
       }
 
       if (aliveCount === 0 && aliens.length > 0) {
