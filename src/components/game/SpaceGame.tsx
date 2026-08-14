@@ -42,6 +42,25 @@ interface Alien {
   diveSwoopDir?: number;
 }
 
+interface Meteor {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  size: number;
+  hp: number;
+  maxHp: number;
+  rotation: number;
+  rotSpeed: number;
+}
+
+interface HeartDrop {
+  x: number;
+  y: number;
+  vy: number;
+  pulse: number;
+}
+
 export function SpaceGame() {
   const { exitArcadeMode, isDark } = useOSStore();
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -130,6 +149,9 @@ export function SpaceGame() {
       if (e.code === "Escape") {
         exitArcadeMode();
       }
+      if (e.code === "KeyR" && gameOverRef.current) {
+        restartGame();
+      }
     };
 
     const handleKeyUp = (e: KeyboardEvent) => {
@@ -188,6 +210,8 @@ export function SpaceGame() {
     let bullets: Bullet[] = [];
     let enemyBullets: Bullet[] = [];
     let particles: Particle[] = [];
+    let meteors: Meteor[] = [];
+    let heartDrops: HeartDrop[] = [];
 
     let currentWave = 1;
     let aliens: Alien[] = [];
@@ -195,18 +219,21 @@ export function SpaceGame() {
     let alienSpeed = 1.5;
     let waveTime = 0;
     let waveStartTime = Date.now();
+    let edgeHitCooldown = 0;
 
     const spawnWave = (wNum: number) => {
       aliens = [];
+      meteors = [];
+      heartDrops = [];
       waveStartTime = Date.now();
       let idx = 0;
       const isMobile = width < 640;
-      const spacingX = isMobile ? Math.min(42, (width - 32) / 6) : 52;
-      const maxCols = isMobile ? 6 : 10;
-      const cols = Math.min(maxCols, Math.floor((width - 32) / spacingX));
-      const alienW = isMobile ? 26 : 34;
-      const alienH = isMobile ? 18 : 24;
-      const rowGap = isMobile ? 30 : 42;
+      const spacingX = isMobile ? Math.min(38, (width - 48) / 6) : 48;
+      const maxCols = isMobile ? 5 : 8;
+      const cols = Math.max(4, Math.min(maxCols, Math.floor((width - 96) / spacingX)));
+      const alienW = isMobile ? 24 : 32;
+      const alienH = isMobile ? 18 : 22;
+      const rowGap = isMobile ? 28 : 38;
       const startY = isMobile ? 65 : 85;
 
       const startX = (width - cols * spacingX) / 2;
@@ -378,7 +405,7 @@ export function SpaceGame() {
       }
 
       const elapsed = Date.now() - waveStartTime;
-      const enemyShootInterval = Math.max(35, 110 - currentWave * 12);
+      const enemyShootInterval = Math.max(25, 140 - (currentWave - 1) * 18);
       const activeAliens = aliens.filter(
         (a) => a.alive && elapsed >= a.appearDelay,
       );
@@ -390,7 +417,7 @@ export function SpaceGame() {
           enemyBullets.push({
             x: randomAlien.x + randomAlien.width / 2,
             y: randomAlien.y + randomAlien.height,
-            vy: 4.5 + currentWave * 0.4,
+            vy: 3.5 + (currentWave - 1) * 0.5,
           });
         }
       }
@@ -399,9 +426,9 @@ export function SpaceGame() {
         const eb = enemyBullets[i];
         eb.y += eb.vy;
 
-        ctx.fillStyle = "#EF4444";
-        ctx.shadowColor = "#EF4444";
-        ctx.shadowBlur = 8;
+        ctx.fillStyle = "#E087FF";
+        ctx.shadowColor = "#E087FF";
+        ctx.shadowBlur = 10;
         ctx.fillRect(eb.x - 2.5, eb.y - 6, 5, 12);
         ctx.shadowBlur = 0;
 
@@ -413,7 +440,7 @@ export function SpaceGame() {
         ) {
           enemyBullets.splice(i, 1);
           spawnExplosion(shipX, shipY, "#EF4444");
-          invincibilityTimer = 65;
+          invincibilityTimer = 130;
           setHitFlash(true);
           setTimeout(() => setHitFlash(false), 200);
 
@@ -435,25 +462,33 @@ export function SpaceGame() {
       let edgeHit = false;
       let aliveCount = 0;
 
-      // Periodically trigger Galaga-style swooping diving attacks!
-      const diveInterval = Math.max(70, 160 - currentWave * 15);
-      if (frameCount % diveInterval === 0 && activeAliens.length > 0) {
-        const formationAliens = activeAliens.filter(
-          (a) => !a.state || a.state === "formation",
-        );
-        if (formationAliens.length > 0) {
-          const countToDive = Math.min(
-            formationAliens.length,
-            Math.random() < 0.35 ? 2 : 1,
+      // Galaga-style swooping diving attacks start on Wave 2+!
+      if (currentWave >= 2) {
+        const diveInterval = Math.max(40, 160 - (currentWave - 2) * 20);
+        if (frameCount % diveInterval === 0 && activeAliens.length > 0) {
+          const formationAliens = activeAliens.filter(
+            (a) => !a.state || a.state === "formation",
           );
-          for (let d = 0; d < countToDive; d++) {
-            const idx = Math.floor(Math.random() * formationAliens.length);
-            const diver = formationAliens[idx];
-            diver.state = "diving";
-            diver.angle = Math.PI / 2;
-            diver.diveSpeed = 3.5 + currentWave * 0.4 + Math.random() * 0.8;
-            diver.diveSwoopDir = (Math.random() - 0.5) * 0.04;
-            formationAliens.splice(idx, 1);
+          if (formationAliens.length > 0) {
+            const maxFlock = Math.min(
+              4,
+              Math.floor(1 + (currentWave - 2) * 0.5),
+            );
+            const countToDive = Math.min(
+              formationAliens.length,
+              Math.max(1, Math.floor(Math.random() * maxFlock) + 1),
+            );
+            for (let d = 0; d < countToDive; d++) {
+              const idx = Math.floor(Math.random() * formationAliens.length);
+              const diver = formationAliens[idx];
+              diver.state = "diving";
+              diver.angle = Math.PI / 2;
+              diver.diveSpeed =
+                3.2 + (currentWave - 2) * 0.5 + Math.random() * 0.6;
+              diver.diveSwoopDir =
+                (Math.random() - 0.5) * (0.03 + (currentWave - 2) * 0.008);
+              formationAliens.splice(idx, 1);
+            }
           }
         }
       }
@@ -476,11 +511,15 @@ export function SpaceGame() {
 
         // --- Alien Movement State Machine ---
         if (!a.state || a.state === "formation") {
-          a.baseX += alienDirection * (alienSpeed + currentWave * 0.25);
+          a.baseX += alienDirection * (alienSpeed + (currentWave - 1) * 0.35);
           a.x = a.baseX;
-          a.y = a.baseY + Math.sin(waveTime * 1.5 + a.baseX * 0.03) * 12;
+          a.y = a.baseY + Math.sin(waveTime * 2.0 + a.type * 0.8) * 8;
 
-          if (a.x < 20 || a.x + a.width > width - 20) {
+          if (
+            edgeHitCooldown === 0 &&
+            ((alienDirection < 0 && a.x < 25) ||
+              (alienDirection > 0 && a.x + a.width > width - 25))
+          ) {
             edgeHit = true;
           }
         } else if (a.state === "diving") {
@@ -493,19 +532,14 @@ export function SpaceGame() {
           while (diff < -Math.PI) diff += Math.PI * 2;
           while (diff > Math.PI) diff -= Math.PI * 2;
           a.angle =
-            (a.angle || Math.PI / 2) + diff * 0.035 + (a.diveSwoopDir || 0);
+            (a.angle || Math.PI / 2) +
+            diff * (0.035 + currentWave * 0.005) +
+            (a.diveSwoopDir || 0);
 
-          a.x += Math.cos(a.angle) * (a.diveSpeed || 3.5);
-          a.y += Math.sin(a.angle) * (a.diveSpeed || 3.5);
+          a.x += Math.cos(a.angle) * (a.diveSpeed || 3.8);
+          a.y += Math.sin(a.angle) * (a.diveSpeed || 3.8);
 
-          // Shoot while diving
-          if (Math.random() < 0.025) {
-            enemyBullets.push({
-              x: a.x + a.width / 2,
-              y: a.y + a.height,
-              vy: 5 + currentWave * 0.4,
-            });
-          }
+
 
           // Direct collision with player ship
           if (
@@ -516,7 +550,7 @@ export function SpaceGame() {
             a.alive = false;
             spawnExplosion(a.x + a.width / 2, a.y + a.height / 2, a.color);
             spawnExplosion(shipX, shipY, "#EF4444");
-            invincibilityTimer = 65;
+            invincibilityTimer = 130;
             setHitFlash(true);
             setTimeout(() => setHitFlash(false), 200);
             setLives((l) => {
@@ -536,7 +570,7 @@ export function SpaceGame() {
         } else if (a.state === "returning") {
           const targetX = a.baseX;
           const targetY =
-            a.baseY + Math.sin(waveTime * 1.5 + a.baseX * 0.03) * 12;
+            a.baseY + Math.sin(waveTime * 2.0 + a.type * 0.8) * 8;
           const dx = targetX - a.x;
           const dy = targetY - a.y;
           const dist = Math.hypot(dx, dy);
@@ -545,8 +579,8 @@ export function SpaceGame() {
             a.y = targetY;
             a.state = "formation";
           } else {
-            a.x += (dx / dist) * 5;
-            a.y += (dy / dist) * 5;
+            a.x += (dx / dist) * (5 + currentWave * 0.5);
+            a.y += (dy / dist) * (5 + currentWave * 0.5);
           }
         }
 
@@ -578,6 +612,15 @@ export function SpaceGame() {
             bullets.splice(j, 1);
             spawnExplosion(a.x + a.width / 2, a.y + a.height / 2, a.color);
 
+            if (currentWave >= 3 && Math.random() < 0.1) {
+              heartDrops.push({
+                x: a.x + a.width / 2,
+                y: a.y + a.height / 2,
+                vy: 1.5,
+                pulse: 0,
+              });
+            }
+
             setScore((s) => {
               const newScore = s + a.points;
               setHighScore((h) => {
@@ -607,12 +650,273 @@ export function SpaceGame() {
         spawnWave(currentWave);
       }
 
-      if (edgeHit) {
+      if (edgeHitCooldown > 0) {
+        edgeHitCooldown--;
+      }
+
+      if (edgeHit && edgeHitCooldown === 0) {
+        edgeHitCooldown = 25;
         alienDirection *= -1;
+        const dropAmount = 14 + Math.min(12, currentWave * 2);
         for (let i = 0; i < aliens.length; i++) {
-          aliens[i].baseY += 14;
-          aliens[i].y += 14;
+          aliens[i].baseY += dropAmount;
+          aliens[i].y += dropAmount;
         }
+      }
+
+      // --- Spawn Meteors (Wave 5+) ---
+      if (currentWave >= 5) {
+        const meteorSpawnInterval = Math.max(70, 220 - (currentWave - 5) * 25);
+        if (frameCount % meteorSpawnInterval === 0) {
+          const meteorHp = currentWave - 4; // Wave 5 = 1, Wave 6 = 2, Wave 7 = 3...
+          meteors.push({
+            x: Math.random() * (width - 80) + 40,
+            y: -30,
+            vx: (Math.random() - 0.5) * (1.2 + (currentWave - 5) * 0.2),
+            vy: 2.0 + Math.random() * 1.2 + (currentWave - 5) * 0.4,
+            size: 16 + Math.random() * 14,
+            hp: meteorHp,
+            maxHp: meteorHp,
+            rotation: Math.random() * Math.PI * 2,
+            rotSpeed: (Math.random() - 0.5) * 0.05,
+          });
+        }
+      }
+
+      // --- Update & Render Meteors ---
+      for (let i = meteors.length - 1; i >= 0; i--) {
+        const m = meteors[i];
+        m.x += m.vx;
+        m.y += m.vy;
+        m.rotation += m.rotSpeed;
+
+        if (m.y > height + 40) {
+          meteors.splice(i, 1);
+          continue;
+        }
+
+        // Bullet hit meteor
+        for (let j = bullets.length - 1; j >= 0; j--) {
+          const b = bullets[j];
+          if (Math.hypot(b.x - m.x, b.y - m.y) < m.size + 4) {
+            bullets.splice(j, 1);
+            m.hp -= 1;
+            spawnPopFx(b.x, b.y, "#A8A29E");
+
+            if (m.hp <= 0) {
+              spawnExplosion(m.x, m.y, "#78716C");
+              const pts = m.maxHp * 25;
+              setScore((s) => s + pts);
+
+              // 25% chance to drop a heart!
+              if (Math.random() < 0.25) {
+                heartDrops.push({
+                  x: m.x,
+                  y: m.y,
+                  vy: 1.6,
+                  pulse: 0,
+                });
+              }
+              meteors.splice(i, 1);
+              break;
+            }
+          }
+        }
+
+        if (m.hp <= 0) continue;
+
+        // Player hit meteor
+        if (
+          invincibilityTimer === 0 &&
+          Math.hypot(shipX - m.x, shipY - m.y) < m.size + 18
+        ) {
+          spawnExplosion(m.x, m.y, "#78716C");
+          spawnExplosion(shipX, shipY, "#EF4444");
+          meteors.splice(i, 1);
+          invincibilityTimer = 130;
+          setHitFlash(true);
+          setTimeout(() => setHitFlash(false), 200);
+          setLives((l) => {
+            const next = l - 1;
+            if (next <= 0) triggerGameOver();
+            return next;
+          });
+          continue;
+        }
+
+        // Spawn trailing fire particles
+        if (Math.random() < 0.7) {
+          particles.push({
+            x: m.x + (Math.random() - 0.5) * m.size * 0.7,
+            y: m.y - m.size * 0.4,
+            vx: -m.vx * 0.2 + (Math.random() - 0.5) * 1.5,
+            vy: -m.vy * 0.5 - Math.random() * 2.5,
+            life: 0,
+            maxLife: 10 + Math.random() * 8,
+            color: Math.random() < 0.5 ? "#F97316" : "#FACC15",
+            size: 2 + Math.random() * 2,
+          });
+        }
+
+        // Draw Pixel-Art Animated Fiery Meteor
+        const sz = m.size * 1.2;
+        const mx = m.x;
+        const my = m.y;
+
+        // Dynamic Flame Animation Parameters
+        const fCycle = (frameCount + Math.floor(mx * 10)) * 0.35;
+        const flameWave1 = Math.sin(fCycle) * sz * 0.15;
+        const flameWave2 = Math.cos(fCycle * 1.4) * sz * 0.12;
+        const flameH = sz * 1.1 + Math.sin(fCycle * 2) * sz * 0.2;
+
+        // 1. Animated Fiery Tail Layers (Red -> Orange -> Yellow -> White)
+        // Red Outer Flame
+        ctx.fillStyle = "#EF4444";
+        ctx.fillRect(
+          mx - sz * 0.4 + flameWave1,
+          my - sz * 0.4 - flameH * 0.75,
+          sz * 0.8,
+          flameH * 0.75,
+        );
+        ctx.fillRect(
+          mx - sz * 0.25 - flameWave2,
+          my - sz * 0.4 - flameH * 1.05,
+          sz * 0.5,
+          flameH * 0.4,
+        );
+        ctx.fillRect(
+          mx - sz * 0.55 + flameWave2,
+          my - sz * 0.4 - flameH * 0.55,
+          sz * 0.3,
+          flameH * 0.5,
+        );
+        ctx.fillRect(
+          mx + sz * 0.25 - flameWave1,
+          my - sz * 0.4 - flameH * 0.55,
+          sz * 0.3,
+          flameH * 0.5,
+        );
+
+        // Orange Mid Flame
+        ctx.fillStyle = "#F97316";
+        ctx.fillRect(
+          mx - sz * 0.3 - flameWave2,
+          my - sz * 0.4 - flameH * 0.7,
+          sz * 0.6,
+          flameH * 0.6,
+        );
+        ctx.fillRect(
+          mx - sz * 0.15 + flameWave1,
+          my - sz * 0.4 - flameH * 0.9,
+          sz * 0.3,
+          flameH * 0.35,
+        );
+
+        // Yellow Inner Flame Core
+        ctx.fillStyle = "#FACC15";
+        ctx.fillRect(
+          mx - sz * 0.2 + flameWave1 * 0.5,
+          my - sz * 0.4 - flameH * 0.5,
+          sz * 0.4,
+          flameH * 0.4,
+        );
+
+        // White Hot Core
+        ctx.fillStyle = "#FFFFFF";
+        ctx.fillRect(
+          mx - sz * 0.1,
+          my - sz * 0.4 - flameH * 0.3,
+          sz * 0.2,
+          flameH * 0.25,
+        );
+
+        // Flying Embers
+        const emberOff1 = (frameCount * 3 + Math.floor(mx)) % 22;
+        const emberOff2 = (frameCount * 4 + Math.floor(my)) % 26;
+        ctx.fillStyle = "#FACC15";
+        ctx.fillRect(
+          mx - sz * 0.25 + flameWave2,
+          my - sz * 0.4 - flameH - emberOff1 * 0.7,
+          sz * 0.15,
+          sz * 0.15,
+        );
+        ctx.fillStyle = "#F97316";
+        ctx.fillRect(
+          mx + sz * 0.1 + flameWave1,
+          my - sz * 0.4 - flameH - emberOff2 * 0.6,
+          sz * 0.18,
+          sz * 0.18,
+        );
+
+        // 2. Pixel-Art Rock Body (Blue-Grey Slate with Craters)
+        // Outer dark border
+        ctx.fillStyle = "#1E293B";
+        ctx.beginPath();
+        ctx.arc(mx, my, sz * 0.55, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Main Rock Surface
+        ctx.fillStyle = "#475569";
+        ctx.beginPath();
+        ctx.arc(mx, my, sz * 0.48, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Top-left Highlight
+        ctx.fillStyle = "#94A3B8";
+        ctx.beginPath();
+        ctx.arc(mx - sz * 0.12, my - sz * 0.12, sz * 0.3, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Craters
+        ctx.fillStyle = "#334155";
+        ctx.fillRect(mx - sz * 0.1, my - sz * 0.1, sz * 0.2, sz * 0.2);
+        ctx.fillRect(mx + sz * 0.12, my + sz * 0.08, sz * 0.15, sz * 0.15);
+        ctx.fillRect(mx - sz * 0.25, my + sz * 0.12, sz * 0.15, sz * 0.15);
+
+        // Damage Cracks if damaged
+        if (m.hp < m.maxHp) {
+          ctx.fillStyle = "#F97316";
+          ctx.fillRect(mx - sz * 0.2, my - sz * 0.15, sz * 0.35, sz * 0.08);
+          ctx.fillRect(mx - sz * 0.05, my - sz * 0.15, sz * 0.08, sz * 0.35);
+        }
+      }
+
+      // --- Update & Render Heart Drops ---
+      for (let i = heartDrops.length - 1; i >= 0; i--) {
+        const h = heartDrops[i];
+        h.y += h.vy;
+        h.pulse += 0.08;
+
+        if (h.y > height + 30) {
+          heartDrops.splice(i, 1);
+          continue;
+        }
+
+        // Pickup by player ship!
+        if (Math.hypot(shipX - h.x, shipY - h.y) < 30) {
+          heartDrops.splice(i, 1);
+          sounds.playHeart();
+          spawnPopFx(shipX, shipY, "#EF4444");
+          setLives((l) => Math.min(3, l + 1));
+          continue;
+        }
+
+        // Render glowing pulsing heart (matching HUD Lucide Heart)
+        ctx.save();
+        ctx.translate(h.x, h.y);
+        const pulseScale = (1 + Math.sin(h.pulse) * 0.15) * 0.75;
+        ctx.scale(pulseScale, pulseScale);
+        ctx.translate(-12, -12);
+
+        ctx.fillStyle = "#EF4444";
+        ctx.shadowColor = "#EF4444";
+        ctx.shadowBlur = 12;
+
+        const heartPath = new Path2D(
+          "M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z",
+        );
+        ctx.fill(heartPath);
+        ctx.restore();
       }
 
       for (let i = particles.length - 1; i >= 0; i--) {
@@ -749,7 +1053,7 @@ export function SpaceGame() {
                 className="flex items-center justify-center space-x-2 px-5 py-3 rounded-xl bg-brand text-zinc-950 font-bold hover:bg-brand/90 transition-colors text-sm cursor-pointer"
               >
                 <RotateCcw className="w-4 h-4" />
-                <span>Play Again</span>
+                <span>Play Again (R)</span>
               </button>
 
               <button

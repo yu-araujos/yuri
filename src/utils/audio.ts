@@ -65,6 +65,11 @@ class SoundEffects {
       );
     }, 200);
   }
+
+  playHeart() {
+    // Happy chime for picking up a heart
+    play(...[, , 537, .02, .02, .22, 1, 1.59, -6.98, 4.97]);
+  }
 }
 
 export const sounds = new SoundEffects();
