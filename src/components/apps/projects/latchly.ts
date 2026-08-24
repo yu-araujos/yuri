@@ -45,6 +45,7 @@ export const latchly: Project = {
       title: "Concurrency Layer",
       skills: [
         "Pessimistic locking (DB-backed)",
+        "PostgreSQL Transactions (FOR UPDATE)",
         "60s TTL auto-release",
         "Atomic position reordering",
         "Lock-aware drag & drop",
@@ -68,6 +69,7 @@ export const latchly: Project = {
       period: "Drag & Drop",
       bullets: [
         "Card drag emits a move event to the backend, which runs a DB transaction to shift neighbor positions safely.",
+        "The transaction uses batch increment/decrement on affected rows to avoid ordinal gaps and duplicate positions on concurrent moves.",
         "This prevents race conditions when two moves happen close together. The final board state is always consistent.",
         "Dragging is disabled client-side if the target card is currently locked by another user.",
       ],
