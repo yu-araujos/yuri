@@ -2,7 +2,7 @@
 
 An interactive, macOS-inspired personal portfolio web app built with Next.js, TypeScript, Framer Motion, and Tailwind CSS. Designed to showcase interactive case studies, career experience, and technical projects inside a desktop windowing environment.
 
-🌐 **Website**: [yuri.pt](https://yuri.pt)
+🌐 **Website**: <a href="https://yuri.pt" target="_blank" rel="noopener noreferrer">yuri.pt</a>
 
 ---
 
