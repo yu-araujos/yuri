@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
 
 const APPS = [
   { id: "about" as AppId, label: "About", icon: User, disabled: false },
-  { id: "projects" as AppId, label: "Soon", icon: FolderGit2, disabled: true },
+  { id: "projects" as AppId, label: "Projects", icon: FolderGit2, disabled: false },
   { id: "contact" as AppId, label: "Contact", icon: AtSign, disabled: false },
 ];
 

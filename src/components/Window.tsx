@@ -6,6 +6,7 @@ import { AppId, useOSStore } from "@/store/useOSStore";
 import { cn } from "@/lib/utils";
 import { AboutApp } from "./apps/AboutApp";
 import { ContactApp } from "./apps/ContactApp";
+import { ProjectsApp } from "./apps/ProjectsApp";
 
 import { X, Minus, Maximize2 } from "lucide-react";
 
@@ -187,6 +188,8 @@ export function Window({ id }: WindowProps) {
                 <AboutApp />
               ) : id === "contact" ? (
                 <ContactApp />
+              ) : id === "projects" ? (
+                <ProjectsApp />
               ) : (
                 <div className="space-y-4">
                   <p>Welcome to the {titleMap[id]} section.</p>
