@@ -54,7 +54,13 @@ export function AboutApp() {
     },
     {
       title: "Backend & Systems",
-      skills: ["Node.js & Express", "Java", "RESTful APIs"],
+      skills: [
+        "Node.js & Express",
+        "PostgreSQL & Prisma",
+        "WebSockets (Socket.io)",
+        "Java",
+        "RESTful APIs",
+      ],
     },
     {
       title: "Testing & Ecosystem",
@@ -250,7 +256,7 @@ export function AboutApp() {
         <div className="relative pl-6 sm:pl-8 space-y-8 sm:space-y-10 border-l-2 border-stone-200 dark:border-zinc-800">
           {timeline.map((item, idx) => (
             <div key={idx} className="relative group">
-              <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-3.5 h-3.5 rounded-full bg-stone-300 dark:bg-zinc-700 group-hover:bg-brand transition-colors border-2 border-stone-50 dark:border-zinc-950" />
+              <div className="absolute -left-7.75 sm:-left-9.75 top-1.5 w-3.5 h-3.5 rounded-full bg-stone-300 dark:bg-zinc-700 group-hover:bg-brand transition-colors border-2 border-stone-50 dark:border-zinc-950" />
 
               <div className="space-y-2.5">
                 <div className="flex flex-wrap items-center gap-2 font-mono text-xs text-zinc-500">
