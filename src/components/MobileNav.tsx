@@ -8,13 +8,7 @@ import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
   { id: "about" as AppId, label: "About", icon: User, disabled: false },
-  {
-    id: "projects" as AppId,
-    label: "Projects",
-    tag: "Soon",
-    icon: FolderGit2,
-    disabled: true,
-  },
+  { id: "projects" as AppId, label: "Projects", icon: FolderGit2, disabled: false },
   { id: "contact" as AppId, label: "Contact", icon: AtSign, disabled: false },
 ];
 
@@ -130,11 +124,7 @@ export function MobileNav() {
                         <span>{item.label}</span>
                       </div>
 
-                      {item.tag && (
-                        <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded-full bg-stone-200 dark:bg-zinc-800 text-zinc-500">
-                          {item.tag}
-                        </span>
-                      )}
+
                     </button>
                   );
                 })}
