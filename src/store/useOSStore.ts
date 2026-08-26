@@ -39,6 +39,75 @@ const defaultWindows: Record<AppId, WindowState> = {
   arcade: { id: 'arcade', isOpen: false, isMinimized: false, isMaximized: false, zIndex: 0 },
 };
 
+function handleOpenContact(state: OSState, newZIndex: number): Partial<OSState> {
+  return {
+    windows: {
+      ...state.windows,
+      contact: {
+        ...state.windows.contact,
+        isOpen: true,
+        isMinimized: false,
+        isMaximized: false,
+        zIndex: newZIndex,
+      },
+    },
+    activeWindow: 'contact',
+    highestZIndex: newZIndex,
+  };
+}
+
+function handleOpenStandardApp(
+  state: OSState,
+  id: AppId,
+  newZIndex: number
+): Partial<OSState> {
+  const isAppOpen = state.windows[id].isOpen;
+  const otherMaximizedKey = (Object.keys(state.windows) as AppId[]).find(
+    (key) => key !== 'contact' && key !== id && state.windows[key].isMaximized
+  );
+
+  if (otherMaximizedKey) {
+    const updatedWindows = { ...state.windows };
+    updatedWindows[otherMaximizedKey] = {
+      ...updatedWindows[otherMaximizedKey],
+      isMinimized: true,
+    };
+    updatedWindows[id] = {
+      ...updatedWindows[id],
+      isOpen: true,
+      isMinimized: false,
+      isMaximized: true,
+      zIndex: newZIndex,
+    };
+
+    return {
+      windows: updatedWindows,
+      activeWindow: id,
+      highestZIndex: newZIndex,
+    };
+  }
+
+  if (isAppOpen) {
+    return {
+      windows: {
+        ...state.windows,
+        [id]: { ...state.windows[id], isMinimized: false, zIndex: newZIndex },
+      },
+      activeWindow: id,
+      highestZIndex: newZIndex,
+    };
+  }
+
+  return {
+    windows: {
+      ...state.windows,
+      [id]: { ...state.windows[id], isOpen: true, isMinimized: false, zIndex: newZIndex },
+    },
+    activeWindow: id,
+    highestZIndex: newZIndex,
+  };
+}
+
 export const useOSStore = create<OSState>((set, get) => ({
   windows: defaultWindows,
   activeWindow: null,
@@ -67,82 +136,26 @@ export const useOSStore = create<OSState>((set, get) => ({
 
   openApp: (id) =>
     set((state) => {
-      if (id === "arcade") {
+      if (id === 'arcade') {
         get().startArcadeMode();
         return state;
       }
 
       const newZIndex = state.highestZIndex + 1;
 
-      if (id === "contact") {
-        return {
-          windows: {
-            ...state.windows,
-            contact: {
-              ...state.windows.contact,
-              isOpen: true,
-              isMinimized: false,
-              isMaximized: false,
-              zIndex: newZIndex,
-            },
-          },
-          activeWindow: "contact",
-          highestZIndex: newZIndex,
-        };
+      if (id === 'contact') {
+        return handleOpenContact(state, newZIndex);
       }
 
-      const isAppOpen = state.windows[id].isOpen;
-      const otherMaximized = (Object.keys(state.windows) as AppId[]).find(
-        (key) => key !== "contact" && key !== id && state.windows[key].isMaximized,
-      );
-
-      if (otherMaximized) {
-        const updatedWindows = { ...state.windows };
-        updatedWindows[otherMaximized] = {
-          ...updatedWindows[otherMaximized],
-          isMinimized: true,
-        };
-        updatedWindows[id] = {
-          ...updatedWindows[id],
-          isOpen: true,
-          isMinimized: false,
-          isMaximized: true,
-          zIndex: newZIndex,
-        };
-
-        return {
-          windows: updatedWindows,
-          activeWindow: id,
-          highestZIndex: newZIndex,
-        };
-      }
-
-      if (isAppOpen) {
-        return {
-          windows: {
-            ...state.windows,
-            [id]: { ...state.windows[id], isMinimized: false, zIndex: newZIndex },
-          },
-          activeWindow: id,
-          highestZIndex: newZIndex,
-        };
-      }
-
-      return {
-        windows: {
-          ...state.windows,
-          [id]: { ...state.windows[id], isOpen: true, isMinimized: false, zIndex: newZIndex },
-        },
-        activeWindow: id,
-        highestZIndex: newZIndex,
-      };
+      return handleOpenStandardApp(state, id, newZIndex);
     }),
 
   closeApp: (id) =>
     set((state) => {
-      const nextActive = Object.values(state.windows)
-        .filter((w) => w.id !== id && w.isOpen && !w.isMinimized)
-        .sort((a, b) => b.zIndex - a.zIndex)[0]?.id || null;
+      const nextActive =
+        Object.values(state.windows)
+          .filter((w) => w.id !== id && w.isOpen && !w.isMinimized)
+          .sort((a, b) => b.zIndex - a.zIndex)[0]?.id || null;
 
       return {
         windows: {
@@ -155,9 +168,10 @@ export const useOSStore = create<OSState>((set, get) => ({
 
   minimizeApp: (id) =>
     set((state) => {
-      const nextActive = Object.values(state.windows)
-        .filter((w) => w.id !== id && w.isOpen && !w.isMinimized)
-        .sort((a, b) => b.zIndex - a.zIndex)[0]?.id || null;
+      const nextActive =
+        Object.values(state.windows)
+          .filter((w) => w.id !== id && w.isOpen && !w.isMinimized)
+          .sort((a, b) => b.zIndex - a.zIndex)[0]?.id || null;
 
       return {
         windows: {
@@ -170,15 +184,19 @@ export const useOSStore = create<OSState>((set, get) => ({
 
   maximizeApp: (id) =>
     set((state) => {
-      if (id === "contact") return state;
+      if (id === 'contact') return state;
 
       const willBeMaximized = !state.windows[id].isMaximized;
       const updatedWindows = { ...state.windows };
 
       if (willBeMaximized) {
         (Object.keys(updatedWindows) as AppId[]).forEach((key) => {
-          if (key !== id && key !== "contact" && updatedWindows[key].isOpen) {
-            updatedWindows[key] = { ...updatedWindows[key], isMinimized: true, isMaximized: false };
+          if (key !== id && key !== 'contact' && updatedWindows[key].isOpen) {
+            updatedWindows[key] = {
+              ...updatedWindows[key],
+              isMinimized: true,
+              isMaximized: false,
+            };
           }
         });
       }
@@ -191,7 +209,7 @@ export const useOSStore = create<OSState>((set, get) => ({
   focusApp: (id) =>
     set((state) => {
       if (state.activeWindow === id) return state;
-      
+
       const newZIndex = state.highestZIndex + 1;
       return {
         windows: {
