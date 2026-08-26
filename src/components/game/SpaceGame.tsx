@@ -82,9 +82,11 @@ export function SpaceGame() {
   const [restartCount, setRestartCount] = useState(0);
 
   useEffect(() => {
-    const saved = localStorage.getItem("arcade_highscore");
-    if (saved) {
-      setHighScore(parseInt(saved, 10) || 0);
+    try {
+      const saved = localStorage.getItem("arcade_highscore");
+      if (saved) setHighScore(parseInt(saved, 10) || 0);
+    } catch {
+      // storage unavailable
     }
   }, []);
 
@@ -669,7 +671,11 @@ export function SpaceGame() {
               const newScore = s + a.points;
               setHighScore((h) => {
                 if (newScore > h) {
-                  localStorage.setItem("arcade_highscore", String(newScore));
+                  try {
+                    localStorage.setItem("arcade_highscore", String(newScore));
+                  } catch {
+                    // storage unavailable
+                  }
                   return newScore;
                 }
                 return h;

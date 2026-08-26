@@ -1,11 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ExternalLink, Check, Copy } from "lucide-react";
 import { FaGithub, FaLinkedin } from "react-icons/fa6";
 
 export function ContactApp() {
   const [copiedLink, setCopiedLink] = useState<string | null>(null);
+  const copyTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (copyTimeoutRef.current) clearTimeout(copyTimeoutRef.current);
+    };
+  }, []);
 
   const links = [
     {
@@ -25,7 +32,8 @@ export function ContactApp() {
   const handleCopy = (url: string, name: string) => {
     navigator.clipboard.writeText(url);
     setCopiedLink(name);
-    setTimeout(() => setCopiedLink(null), 2000);
+    if (copyTimeoutRef.current) clearTimeout(copyTimeoutRef.current);
+    copyTimeoutRef.current = setTimeout(() => setCopiedLink(null), 2000);
   };
 
   return (
