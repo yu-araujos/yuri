@@ -1,7 +1,7 @@
 "use client";
 
 import Card from "./Card";
-import { projects, type Project } from "@/data/projects";
+import { projects } from "@/data/projects";
 
 export function ProjectsMasonry() {
   return (
