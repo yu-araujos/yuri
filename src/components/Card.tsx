@@ -4,10 +4,11 @@ import React from "react";
 import { ArrowUpRight } from "lucide-react";
 
 export interface CardProps {
-  title?: string;
-  subtitle?: string;
-  description?: string;
-  badge?: string;
+  title?: React.ReactNode;
+  subtitle?: React.ReactNode;
+  description?: React.ReactNode;
+  badge?: React.ReactNode;
+  showBadgeDot?: boolean;
   children?: React.ReactNode;
   className?: string;
   showFooterAction?: boolean;
@@ -19,6 +20,7 @@ export function Card({
   subtitle,
   description,
   badge,
+  showBadgeDot = false,
   children,
   className = "",
   showFooterAction = true,
@@ -40,10 +42,12 @@ export function Card({
 
           {badge && (
             <div className="inline-flex items-center gap-2 rounded-full bg-surface-mid/80 px-3 py-1 border border-border-base/50">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-500 opacity-75" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
-              </span>
+              {showBadgeDot && (
+                <span className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-500 opacity-75" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
+                </span>
+              )}
               <span className="font-mono text-[10px] uppercase tracking-wider text-fg font-medium">
                 {badge}
               </span>

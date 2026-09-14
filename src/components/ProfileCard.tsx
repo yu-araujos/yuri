@@ -4,19 +4,34 @@ import React from "react";
 import { Briefcase, MapPin } from "lucide-react";
 import Card from "./Card";
 
-interface ProfileCardProps {
-  className?: string;
-}
-
-export function ProfileCard({ className = "" }: ProfileCardProps) {
+export function ProfileCard() {
   return (
     <Card
-      subtitle="SOFTWARE ENGINEER"
+      subtitle={
+        <span className="flex items-center gap-1.5">
+          <span className="h-1.5 w-1.5 rounded-full bg-red" />
+          <span>SOFTWARE ENGINEER</span>
+        </span>
+      }
       badge="Open to new remote roles"
-      title="Hi, I'm Yuri Silva"
-      description="React, Next.js, and TypeScript in hand. Angular front-end at Dachser by day, full-stack projects like this one on my own time."
+      showBadgeDot={true}
+      title={
+        <>
+          Hi, I&apos;m Yuri <span className="text-red">Silva</span>
+        </>
+      }
+      description={
+        <>
+          <span className="text-fg font-medium">React</span>,{" "}
+          <span className="text-fg font-medium">Next.js</span>, and{" "}
+          <span className="text-fg font-medium">TypeScript</span> in hand.
+          Angular front-end at{" "}
+          <span className="text-red font-semibold">Dachser</span> by day,
+          full-stack projects like this one on my own time.
+        </>
+      }
       showFooterAction={false}
-      className={className}
+      className="w-full max-w-145"
     >
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4 border-t border-border-base/40">
         <div className="flex items-start gap-2.5">
@@ -26,7 +41,8 @@ export function ProfileCard({ className = "" }: ProfileCardProps) {
               CURRENT ROLE
             </span>
             <span className="text-fg font-medium">
-              Frontend Engineer · Dachser
+              Frontend Engineer ·{" "}
+              <span className="text-red font-semibold">Dachser</span>
             </span>
           </div>
         </div>
