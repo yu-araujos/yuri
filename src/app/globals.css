@@ -17,7 +17,7 @@
   --color-muted-fg:      #888888;
   --color-subtle-fg:     #555555;
 
-  --color-red:           #E63C2F;   /* accent — SILVA, CTAs */
+  --color-red:           #E63C2F;  
   --color-red-hover:     #ff4535;
   --color-red-dim:       rgb(230 60 47 / 0.15);
 
@@ -54,7 +54,7 @@
   --font-display: var(--font-display, var(--font-sans));
 
   /* ── Radius ── */
-  --radius:    0px;          /* sharp corners throughout */
+  --radius:    0px;      
   --radius-lg: 0px;
   --radius-md: 0px;
   --radius-sm: 0px;

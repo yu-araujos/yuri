@@ -40,7 +40,10 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} ${barlowCondensed.variable} dark`}
     >
-      <body className="min-h-screen bg-bg text-fg font-sans antialiased">
+      <body
+        className="min-h-screen bg-bg text-fg font-sans antialiased"
+        suppressHydrationWarning
+      >
         {children}
       </body>
     </html>
