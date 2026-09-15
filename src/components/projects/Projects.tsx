@@ -34,6 +34,7 @@ export default function Projects() {
               title={project.title}
               description={project.description}
               footerText="See Project"
+              footerHref={project.link}
             >
               <div className="relative mt-2 w-full overflow-hidden rounded-xl">
                 {project.tags.map((tag) => (

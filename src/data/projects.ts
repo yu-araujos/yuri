@@ -6,6 +6,7 @@ export const projects: Project[] = [
     title: "Latchly",
     description: "Real-time Kanban Board",
     category: "Fullstack Project",
+    link: "https://github.com/yu-araujos/latchly",
     tags: [
       "Next.js",
       "TypeScript",

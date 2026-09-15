@@ -24,6 +24,7 @@ export default function Card({
   className = "",
   showFooterAction = true,
   footerText = "Explorar",
+  footerHref,
   compact = false,
 }: CardProps) {
   return (
@@ -85,7 +86,10 @@ export default function Card({
           transition={{ duration: 0.25, ease: "easeOut" }}
           className="mt-auto overflow-hidden"
         >
-          <motion.div
+          <motion.a
+            {...(footerHref
+              ? { href: footerHref, target: "_blank", rel: "noopener noreferrer" }
+              : {})}
             variants={footerContentVariants}
             className="flex items-center justify-between pt-4 border-t border-border-base/50"
           >
@@ -95,7 +99,7 @@ export default function Card({
             <div className="flex h-9 w-9 items-center justify-center rounded-full transition-transform duration-200 group-hover:scale-110 group-hover:text-fg group-hover:bg-red mr-2">
               <ArrowUpRight className="h-4 w-4" />
             </div>
-          </motion.div>
+          </motion.a>
         </motion.div>
       )}
     </motion.article>

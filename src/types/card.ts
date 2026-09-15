@@ -10,5 +10,6 @@ export interface CardProps {
   className?: string;
   showFooterAction?: boolean;
   footerText?: string;
+  footerHref?: string;
   compact?: boolean;
 }
