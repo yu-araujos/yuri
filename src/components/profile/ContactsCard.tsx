@@ -1,7 +1,7 @@
 "use client";
 
-import Card from "./Card";
 import { CONTACTS } from "@/data/contact";
+import Card from "../Card";
 
 export function ContactsCard() {
   return (

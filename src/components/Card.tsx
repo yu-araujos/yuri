@@ -70,7 +70,7 @@ export default function Card({
 
         {description && (
           <p
-            className={`mt-3 leading-relaxed text-muted-ys ${compact ? "text-xs md:text-sm" : "max-w-xl text-sm md:text-base"}`}
+            className={`mt-3 leading-relaxed text-muted-ys ${compact ? "text-xs md:text-sm" : "text-sm md:text-base"}`}
           >
             {description}
           </p>

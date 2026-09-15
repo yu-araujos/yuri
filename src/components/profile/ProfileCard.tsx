@@ -1,7 +1,7 @@
 "use client";
 
 import { Briefcase, MapPin } from "lucide-react";
-import Card from "./Card";
+import Card from "../Card";
 
 export default function ProfileCard() {
   return (
