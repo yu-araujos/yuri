@@ -1,9 +1,29 @@
-import { Desktop } from "@/components/Desktop";
+import ContactsCard from "@/components/profile/ContactsCard";
+import GithubStatsCard from "@/components/profile/GithubStatsCard";
+import ProfileCard from "@/components/profile/ProfileCard";
+import Projects from "@/components/projects/Projects";
+import Sidebar from "@/components/Sidebar";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-black text-white">
-      <Desktop />
+    <main className="flex h-dvh overflow-hidden bg-bg text-fg">
+      <Sidebar />
+
+      <section className="flex-1 min-w-0 p-6 md:p-8 lg:p-10 overflow-hidden">
+        <div className="grid h-full min-h-0 grid-cols-1 lg:grid-cols-[minmax(0,1.55fr)_minmax(0,0.85fr)] gap-6 lg:gap-8 xl:gap-10">
+          <div className="flex min-h-0 flex-col gap-6 overflow-y-auto pr-1">
+            <div className="grid min-w-0 grid-cols-[1.4fr_1fr] items-stretch gap-4 lg:gap-5">
+              <ProfileCard />
+              <GithubStatsCard />
+            </div>
+            <ContactsCard />
+          </div>
+
+          <div className="min-h-0 overflow-hidden">
+            <Projects />
+          </div>
+        </div>
+      </section>
     </main>
   );
 }
