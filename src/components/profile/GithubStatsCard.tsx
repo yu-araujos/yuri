@@ -1,6 +1,6 @@
 import { getContributions } from "@/lib/github";
 import type { ContributionDay } from "@/types/github";
-import Card from "./Card";
+import Card from "../Card";
 
 const LEVEL_CLASSES = [
   "bg-surface-mid/40",

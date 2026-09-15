@@ -1,7 +1,7 @@
 "use client";
 
-import Card from "./Card";
-import ProjectWireframeCard from "./projects/ProjectWireframeCard";
+import Card from "../Card";
+import ProjectWireframeCard from "../projects/ProjectWireframeCard";
 import { projects } from "@/data/projects";
 
 const MIN_GRID_SLOTS = 2;

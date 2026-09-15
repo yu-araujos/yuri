@@ -1,8 +1,8 @@
+import ContactsCard from "@/components/profile/ContactsCard";
+import GithubStatsCard from "@/components/profile/GithubStatsCard";
+import ProfileCard from "@/components/profile/ProfileCard";
+import Projects from "@/components/projects/Projects";
 import Sidebar from "@/components/Sidebar";
-import ProfileCard from "@/components/ProfileCard";
-import ContactsCard from "@/components/ContactsCard";
-import Projects from "@/components/Projects";
-import GithubStatsCard from "@/components/GithubStatsCard";
 
 export default function Home() {
   return (
