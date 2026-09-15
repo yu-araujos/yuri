@@ -2,6 +2,7 @@
 
 import React from "react";
 import { ArrowUpRight } from "lucide-react";
+import { motion } from "framer-motion";
 
 export interface CardProps {
   title?: React.ReactNode;
@@ -15,7 +16,7 @@ export interface CardProps {
   footerText?: string;
 }
 
-export function Card({
+export default function Card({
   title = "Card",
   subtitle,
   description,
@@ -26,8 +27,21 @@ export function Card({
   showFooterAction = true,
   footerText = "Explorar",
 }: CardProps) {
+  const footerWrapperVariants = {
+    rest: { height: 0, opacity: 0 },
+    hover: { height: 75, opacity: 1 },
+  };
+
+  const footerContentVariants = {
+    rest: { y: 8 },
+    hover: { y: 0 },
+  };
+
   return (
-    <article
+    <motion.article
+      initial="rest"
+      animate="rest"
+      whileHover="hover"
       className={`group relative flex flex-col justify-between overflow-hidden rounded-2xl md:rounded-3xl border border-border-base bg-surface p-6 md:p-8 transition-all duration-300 hover:border-subtle-fg hover:shadow-xl hover:shadow-black/40 ${className}`}
     >
       {(subtitle || badge) && (
@@ -73,17 +87,24 @@ export function Card({
       </div>
 
       {showFooterAction && (
-        <div className="flex items-center justify-between pt-4 border-t border-border-base/50">
-          <span className="font-mono text-[11px] uppercase tracking-wider text-subtle-ys">
-            {footerText}
-          </span>
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-surface-mid text-muted-ys transition-transform duration-200 group-hover:scale-110 group-hover:text-fg group-hover:bg-red">
-            <ArrowUpRight className="h-4 w-4" />
-          </div>
-        </div>
+        <motion.div
+          variants={footerWrapperVariants}
+          transition={{ duration: 0.25, ease: "easeOut" }}
+          className="overflow-hidden"
+        >
+          <motion.div
+            variants={footerContentVariants}
+            className="flex items-center justify-between pt-4 border-t border-border-base/50"
+          >
+            <span className="font-mono text-xs uppercase tracking-wider text-subtle-ys">
+              {footerText}
+            </span>
+            <div className="flex h-9 w-9 items-center justify-center rounded-full transition-transform duration-200 group-hover:scale-110 group-hover:text-fg group-hover:bg-red mr-2">
+              <ArrowUpRight className="h-4 w-4" />
+            </div>
+          </motion.div>
+        </motion.div>
       )}
-    </article>
+    </motion.article>
   );
 }
-
-export default Card;

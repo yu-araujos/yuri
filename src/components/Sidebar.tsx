@@ -9,7 +9,7 @@ interface SidebarProps {
   className?: string;
 }
 
-export function Sidebar({
+export default function Sidebar({
   location = "PORTO · PORTUGAL · UTC+1",
   name = "YURI SILVA",
   title = "SOFTWARE ENGINEER",
@@ -53,5 +53,3 @@ export function Sidebar({
     </aside>
   );
 }
-
-export default Sidebar;

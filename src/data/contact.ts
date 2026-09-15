@@ -16,7 +16,7 @@ export const CONTACTS: Contact[] = [
   },
   {
     label: "LinkedIn",
-    href: "linkedin.com/in/yuriaraujoo/",
+    href: "https://linkedin.com/in/yuriaraujoo/",
     icon: FaLinkedin,
   },
 ];

@@ -15,7 +15,7 @@ export function ContactsCard() {
       showFooterAction={false}
       title={
         <>
-          Let&apos;s <span className="text-red">Connect</span>
+          Let's <span className="text-red">Connect</span>
         </>
       }
       className="w-full"
@@ -33,7 +33,7 @@ export function ContactsCard() {
               <contact.icon className="h-5 w-5 text-subtle-ys transition-colors duration-300 group-hover/link:text-red" />
             </div>
 
-            <div className="flex flex-col">
+            <div className="flex flex-col gap-1">
               <span className="font-mono text-[10px] uppercase tracking-wider text-subtle-ys">
                 {contact.label}
               </span>

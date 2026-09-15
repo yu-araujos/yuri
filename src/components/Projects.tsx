@@ -3,7 +3,7 @@
 import Card from "./Card";
 import { projects } from "@/data/projects";
 
-export function ProjectsMasonry() {
+export default function Projects() {
   return (
     <section className="flex flex-col w-full h-[calc(100vh-3.5rem)] md:h-[calc(100vh-4.5rem)]">
       <div className="flex items-center justify-between pb-3 mb-3 border-b border-border-base/50 shrink-0">
@@ -27,12 +27,21 @@ export function ProjectsMasonry() {
               subtitle={project.category}
               badge={project.id}
               title={project.title}
-              description={project.tags.join(" · ")}
+              description={project.description}
               footerText="See Project"
             >
               <div
-                className={`relative w-full ${project.aspectRatio} rounded-xl overflow-hidden mt-2 border border-border-base/40 bg-surface-mid/30`}
-              ></div>
+                className={`relative w-full rounded-xl overflow-hidden mt-2 `}
+              >
+                {project.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="inline-flex ml-0 m-2 justify-center px-2 py-1 rounded-full text-xs font-mono font-medium text-fg bg-surface-high border border-border-base/30"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
             </Card>
           ))}
         </div>
@@ -40,5 +49,3 @@ export function ProjectsMasonry() {
     </section>
   );
 }
-
-export default ProjectsMasonry;
