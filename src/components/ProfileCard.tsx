@@ -31,7 +31,7 @@ export default function ProfileCard() {
         </>
       }
       showFooterAction={false}
-      className="w-full max-w-145"
+      className="w-full"
     >
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4 border-t border-border-base/40">
         <div className="flex items-center gap-2.5">
