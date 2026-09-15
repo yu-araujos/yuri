@@ -9,12 +9,13 @@ const LEVEL_CLASSES = [
   "bg-red",
 ];
 
-export default async function GithubcontributionsCard() {
+export default async function GithubStatsCard() {
   const contributions = await getContributions("yu-araujos");
   const weeks = chunkIntoWeeks(contributions).slice(-16);
 
   return (
     <Card
+      showFooterAction={false}
       subtitle={
         <span className="flex items-center gap-1.5">
           <span className="h-1.5 w-1.5 rounded-full bg-red" />
@@ -25,19 +26,25 @@ export default async function GithubcontributionsCard() {
       footerText="View Profile"
       className="w-full"
     >
-      <div className="flex gap-1 mt-2">
-        {weeks.map((week, i) => (
-          <div key={i} className="flex flex-col gap-1">
-            {week.map((day) => (
-              <div
-                key={day.date}
-                title={`${day.count} commits em ${day.date}`}
-                className={`h-2.5 w-2.5 rounded-xs ${LEVEL_CLASSES[day.level]}`}
-              />
-            ))}
-          </div>
-        ))}
-      </div>
+      {weeks.length > 0 ? (
+        <div className="flex gap-1 mt-2 overflow-x-auto pb-1">
+          {weeks.map((week, i) => (
+            <div key={i} className="flex flex-col gap-1">
+              {week.map((day) => (
+                <div
+                  key={day.date}
+                  title={`${day.count} commits em ${day.date}`}
+                  className={`h-2.5 w-2.5 rounded-xs shrink-0 ${LEVEL_CLASSES[day.level]}`}
+                />
+              ))}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p className="mt-2 font-mono text-xs text-subtle-ys">
+          Data unavailable
+        </p>
+      )}
     </Card>
   );
 }

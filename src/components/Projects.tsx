@@ -1,11 +1,16 @@
 "use client";
 
 import Card from "./Card";
+import ProjectWireframeCard from "./ProjectWireframeCard";
 import { projects } from "@/data/projects";
 
+const MIN_GRID_SLOTS = 2;
+
 export default function Projects() {
+  const placeholderCount = Math.max(0, MIN_GRID_SLOTS - projects.length);
+
   return (
-    <section className="flex flex-col w-full h-[calc(100vh-3.5rem)] ">
+    <section className="flex h-full min-h-0 flex-col">
       <div className="flex items-center justify-between pb-3 mb-3 border-b border-border-base/50 shrink-0">
         <div className="flex items-center gap-2">
           <span className="font-mono text-base text-accent">•</span>
@@ -19,7 +24,7 @@ export default function Projects() {
       </div>
 
       <div className="flex-1 overflow-y-auto pr-2 pb-6">
-        <div className="grid grid-cols-1 sm:grid-cols-[repeat(auto-fit,minmax(280px,380px))] gap-4 items-start">
+        <div className="columns-1 gap-4 *:mb-4 *:break-inside-avoid">
           {projects.map((project) => (
             <Card
               key={project.id}
@@ -30,17 +35,21 @@ export default function Projects() {
               description={project.description}
               footerText="See Project"
             >
-              <div className="relative w-full rounded-xl overflow-hidden mt-2">
+              <div className="relative mt-2 w-full overflow-hidden rounded-xl">
                 {project.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="inline-flex ml-0 m-2 justify-center px-2 py-1 rounded-full text-xs font-mono font-medium text-fg bg-surface-high border border-border-base/30"
+                    className="m-2 ml-0 inline-flex justify-center rounded-full border border-border-base/30 bg-surface-high px-2 py-1 font-mono text-xs font-medium text-fg"
                   >
                     {tag}
                   </span>
                 ))}
               </div>
             </Card>
+          ))}
+
+          {Array.from({ length: placeholderCount }).map((_, i) => (
+            <ProjectWireframeCard key={`placeholder-${i}`} />
           ))}
         </div>
       </div>

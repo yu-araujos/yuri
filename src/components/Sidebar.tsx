@@ -17,7 +17,7 @@ export default function Sidebar({
 }: SidebarProps) {
   return (
     <aside
-      className={`relative flex flex-col items-center justify-between w-14 md:w-16 border-r border-border-base bg-bg select-none shrink-0 h-full min-h-screen ${className}`}
+      className={`relative flex flex-col items-center justify-between w-14 md:w-16 border-r border-border-base bg-bg select-none shrink-0 h-full ${className}`}
       aria-label="Sidebar de Navegação e Identidade"
     >
       <div className="w-full h-14 md:h-16 flex items-center justify-center border-b border-border-base">

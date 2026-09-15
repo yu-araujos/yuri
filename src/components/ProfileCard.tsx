@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { Briefcase, MapPin } from "lucide-react";
 import Card from "./Card";
 
@@ -31,9 +30,9 @@ export default function ProfileCard() {
         </>
       }
       showFooterAction={false}
-      className="w-full"
+      className="h-full w-full min-w-0"
     >
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4 border-t border-border-base/40">
+      <div className="grid grid-cols-1 gap-3 border-t border-border-base/40 pt-4 sm:grid-cols-2">
         <div className="flex items-center gap-2.5">
           <Briefcase className="w-4 h-4 text-subtle-ys shrink-0 mt-0.5" />
           <div className="font-mono text-xs">

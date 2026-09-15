@@ -14,6 +14,7 @@ export interface CardProps {
   className?: string;
   showFooterAction?: boolean;
   footerText?: string;
+  compact?: boolean;
 }
 
 export default function Card({
@@ -26,6 +27,7 @@ export default function Card({
   className = "",
   showFooterAction = true,
   footerText = "Explorar",
+  compact = false,
 }: CardProps) {
   const footerWrapperVariants = {
     rest: { height: 0, opacity: 0 },
@@ -42,11 +44,11 @@ export default function Card({
       initial="rest"
       animate="rest"
       whileHover="hover"
-      className={`group relative flex flex-col justify-between overflow-hidden rounded-2xl md:rounded-3xl border border-border-base bg-surface p-6 md:p-8 transition-all duration-300 hover:border-subtle-fg hover:shadow-xl hover:shadow-black/40 ${className}`}
+      className={`group relative flex flex-col overflow-hidden rounded-2xl md:rounded-3xl border border-border-base bg-surface transition-all duration-300 hover:border-subtle-fg hover:shadow-xl hover:shadow-black/40 ${compact ? "p-4 md:p-5" : "p-6 md:p-8"} ${className}`}
     >
       {(subtitle || badge) && (
-        <div className="flex items-center justify-between gap-4 border-b border-border-base/50 pb-4">
-          <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2 border-b border-border-base/50 pb-4">
+          <div className="flex min-w-0 items-center gap-2">
             {subtitle && (
               <span className="font-mono text-xs text-subtle-ys tracking-wide">
                 {subtitle}
@@ -55,14 +57,14 @@ export default function Card({
           </div>
 
           {badge && (
-            <div className="inline-flex items-center gap-2 rounded-full bg-surface-mid/80 px-3 py-1 border border-border-base/50 shrink-0">
+            <div className="inline-flex max-w-full items-center gap-2 rounded-full bg-surface-mid/80 px-3 py-1 border border-border-base/50">
               {showBadgeDot && (
-                <span className="relative flex h-2 w-2">
+                <span className="relative flex h-2 w-2 shrink-0">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-500 opacity-75" />
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
                 </span>
               )}
-              <span className="font-mono text-[10px] uppercase tracking-wider text-fg font-medium whitespace-nowrap">
+              <span className="font-mono text-[10px] uppercase tracking-wider text-fg font-medium leading-snug">
                 {badge}
               </span>
             </div>
@@ -70,15 +72,19 @@ export default function Card({
         </div>
       )}
 
-      <div className="my-6">
+      <div className={compact ? "mt-3" : "mt-4"}>
         {title && (
-          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-fg uppercase">
+          <h2
+            className={`font-display font-extrabold tracking-tight text-fg uppercase ${compact ? "text-2xl md:text-3xl" : "text-3xl sm:text-4xl md:text-5xl"}`}
+          >
             {title}
           </h2>
         )}
 
         {description && (
-          <p className="mt-3 text-sm md:text-base leading-relaxed text-muted-ys max-w-xl">
+          <p
+            className={`mt-3 leading-relaxed text-muted-ys ${compact ? "text-xs md:text-sm" : "max-w-xl text-sm md:text-base"}`}
+          >
             {description}
           </p>
         )}
@@ -90,7 +96,7 @@ export default function Card({
         <motion.div
           variants={footerWrapperVariants}
           transition={{ duration: 0.25, ease: "easeOut" }}
-          className="overflow-hidden"
+          className="mt-auto overflow-hidden"
         >
           <motion.div
             variants={footerContentVariants}
