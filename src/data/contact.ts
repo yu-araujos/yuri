@@ -1,12 +1,6 @@
 import { SiGithub } from "react-icons/si";
 import { FaLinkedin } from "react-icons/fa";
-import { IconType } from "react-icons";
-
-export interface Contact {
-  label: string;
-  href: string;
-  icon: IconType;
-}
+import type { Contact } from "@/types/contact";
 
 export const CONTACTS: Contact[] = [
   {

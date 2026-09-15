@@ -1,13 +1,7 @@
 "use client";
 
 import Link from "next/link";
-
-interface SidebarProps {
-  location?: string;
-  name?: string;
-  title?: string;
-  className?: string;
-}
+import type { SidebarProps } from "@/types/sidebar";
 
 export default function Sidebar({
   location = "PORTO · PORTUGAL · UTC+1",

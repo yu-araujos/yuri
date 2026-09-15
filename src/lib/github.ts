@@ -1,8 +1,4 @@
-export interface ContributionDay {
-  date: string;
-  count: number;
-  level: 0 | 1 | 2 | 3 | 4;
-}
+import type { ContributionDay } from "@/types/github";
 
 export async function getContributions(
   username: string,

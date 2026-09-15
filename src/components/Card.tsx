@@ -1,21 +1,18 @@
 "use client";
 
-import React from "react";
 import { ArrowUpRight } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
+import type { CardProps } from "@/types/card";
 
-export interface CardProps {
-  title?: React.ReactNode;
-  subtitle?: React.ReactNode;
-  description?: React.ReactNode;
-  badge?: React.ReactNode;
-  showBadgeDot?: boolean;
-  children?: React.ReactNode;
-  className?: string;
-  showFooterAction?: boolean;
-  footerText?: string;
-  compact?: boolean;
-}
+const footerWrapperVariants: Variants = {
+  rest: { height: 0, opacity: 0 },
+  hover: { height: 75, opacity: 1 },
+};
+
+const footerContentVariants: Variants = {
+  rest: { y: 8 },
+  hover: { y: 0 },
+};
 
 export default function Card({
   title = "Card",
@@ -29,16 +26,6 @@ export default function Card({
   footerText = "Explorar",
   compact = false,
 }: CardProps) {
-  const footerWrapperVariants = {
-    rest: { height: 0, opacity: 0 },
-    hover: { height: 75, opacity: 1 },
-  };
-
-  const footerContentVariants = {
-    rest: { y: 8 },
-    hover: { y: 0 },
-  };
-
   return (
     <motion.article
       initial="rest"
