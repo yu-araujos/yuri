@@ -28,8 +28,7 @@ export default function Sidebar({
       <div className="flex-1 flex items-center justify-center py-10">
         <div className="[writing-mode:vertical-rl] rotate-180 flex items-center gap-2 whitespace-nowrap">
           <span className="font-display font-extrabold text-lg md:text-xl tracking-wide uppercase">
-            <span className="text-fg">YURI </span>
-            <span className="text-fg">SILVA</span>
+            <span className="text-fg">{name}</span>
           </span>
           <span className="text-subtle-ys text-sm select-none">·</span>
           <span className="font-display font-semibold text-xs md:text-xl tracking-wide text-muted-ys uppercase">
@@ -40,8 +39,14 @@ export default function Sidebar({
 
       <div className="w-full py-6 flex items-center justify-center border-t border-border-base/40">
         <span className="[writing-mode:vertical-rl] rotate-180 font-mono text-[9px] md:text-[10px] tracking-[0.2em] text-subtle-ys uppercase whitespace-nowrap">
-          PORTO <span className="text-red">·</span> PORTUGAL{" "}
-          <span className="text-red">·</span> UTC+1
+          {location.split(" · ").map((part, index, parts) => (
+            <span key={part}>
+              {part}
+              {index < parts.length - 1 && (
+                <span className="text-red"> · </span>
+              )}
+            </span>
+          ))}
         </span>
       </div>
     </aside>

@@ -15,7 +15,7 @@ export function ContactsCard() {
       showFooterAction={false}
       title={
         <>
-          Let's <span className="text-red">Connect</span>
+          Let’s <span className="text-red">Connect</span>
         </>
       }
       className="h-full w-full min-w-0"
