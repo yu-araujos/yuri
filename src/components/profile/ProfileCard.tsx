@@ -26,7 +26,7 @@ export default function ProfileCard() {
           <span className="text-fg font-medium">TypeScript</span> in hand.
           Angular front-end at{" "}
           <span className="text-red font-semibold">Dachser</span> by day,
-          full-stack projects like this one on my own time.
+          full-stack projects on my own time.
         </>
       }
       showFooterAction={false}
