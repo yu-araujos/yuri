@@ -11,10 +11,10 @@ export default function Sidebar({
 }: SidebarProps) {
   return (
     <aside
-      className={`relative flex flex-col items-center justify-between w-14 md:w-16 border-r border-border-base bg-bg select-none shrink-0 h-full ${className}`}
+      className={`relative flex flex-row md:flex-col items-center justify-between w-full h-14 md:h-full md:w-14 lg:w-16 border-b md:border-b-0 md:border-r border-border-base bg-bg select-none shrink-0 ${className}`}
       aria-label="Sidebar de Navegação e Identidade"
     >
-      <div className="w-full h-14 md:h-16 flex items-center justify-center border-b border-border-base">
+      <div className="h-full w-14 md:w-full md:h-16 flex items-center justify-center border-r md:border-r-0 md:border-b border-border-base shrink-0">
         <Link
           href="/"
           className="group flex items-center justify-center w-full h-full text-white transition-opacity hover:opacity-80"
@@ -25,19 +25,19 @@ export default function Sidebar({
           </span>
         </Link>
       </div>
-      <div className="flex-1 flex items-center justify-center py-10">
-        <div className="[writing-mode:vertical-rl] rotate-180 flex items-center gap-2 whitespace-nowrap">
-          <span className="font-display font-extrabold text-lg md:text-xl tracking-wide uppercase">
+      <div className="flex flex-1 min-w-0 items-center justify-center px-4 md:px-0 md:py-10">
+        <div className="flex md:[writing-mode:vertical-rl] md:rotate-180 items-center gap-2 whitespace-nowrap min-w-0">
+          <span className="truncate font-display font-extrabold text-sm sm:text-base md:text-lg lg:text-xl tracking-wide uppercase">
             <span className="text-fg">{name}</span>
           </span>
-          <span className="text-subtle-ys text-sm select-none">·</span>
-          <span className="font-display font-semibold text-xs md:text-xl tracking-wide text-muted-ys uppercase">
+          <span className="hidden sm:inline text-subtle-ys text-sm select-none">·</span>
+          <span className="hidden sm:block truncate font-display font-semibold text-xs md:text-xl tracking-wide text-muted-ys uppercase">
             {title}
           </span>
         </div>
       </div>
 
-      <div className="w-full py-6 flex items-center justify-center border-t border-border-base/40">
+      <div className="hidden md:flex w-full py-6 items-center justify-center border-t border-border-base/40">
         <span className="[writing-mode:vertical-rl] rotate-180 font-mono text-[9px] md:text-[10px] tracking-[0.2em] text-subtle-ys uppercase whitespace-nowrap">
           {location.split(" · ").map((part, index, parts) => (
             <span key={part}>

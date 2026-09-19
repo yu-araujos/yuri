@@ -10,7 +10,7 @@ export default function Projects() {
   const placeholderCount = Math.max(0, MIN_GRID_SLOTS - projects.length);
 
   return (
-    <section className="flex h-full min-h-0 flex-col">
+    <section className="flex flex-col lg:h-full lg:min-h-0">
       <div className="flex items-center justify-between pb-3 mb-3 border-b border-border-base/50 shrink-0">
         <div className="flex items-center gap-2">
           <span className="font-mono text-base text-accent">•</span>
@@ -23,7 +23,7 @@ export default function Projects() {
         </span>
       </div>
 
-      <div className="flex-1 overflow-y-auto pr-2 pb-6">
+      <div className="lg:flex-1 lg:overflow-y-auto pr-2 pb-6">
         <div className="columns-1 gap-4 *:mb-4 *:break-inside-avoid">
           {projects.map((project) => (
             <Card
